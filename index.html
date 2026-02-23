@@ -1870,6 +1870,70 @@
                 font-size: 8px;
             }
         }
+        
+        /* PRINT STYLES - Professional PDF output */
+        @media print {
+            @page {
+                margin: 0.5in;
+                size: auto;
+            }
+            
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Hide file URL footer */
+            .footer-url,
+            .print-footer,
+            .file-path {
+                display: none !important;
+            }
+            
+            /* Show both newsletter and premium sections */
+            .content-section {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                position: relative !important;
+                page-break-before: always;
+            }
+            
+            #newsletter-section {
+                page-break-before: auto;
+            }
+            
+            /* Remove gray backgrounds in print */
+            .section {
+                background: white !important;
+            }
+            
+            /* Ensure clean backgrounds */
+            * {
+                background-color: transparent !important;
+            }
+            
+            /* Hide popups and sticky banners */
+            .popup-overlay,
+            .sticky-banner,
+            .nav-bar {
+                display: none !important;
+            }
+            
+            /* Make sure content is visible */
+            main.content {
+                display: block !important;
+            }
+            
+            /* Show premium content, hide password gate in print */
+            .password-gate {
+                display: none !important;
+            }
+            
+            #watchlist-content {
+                display: block !important;
+            }
+        }
     </style>
 </head>
 <body>
