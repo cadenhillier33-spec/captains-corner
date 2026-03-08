@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Watchlist — Captain's Corner</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600&display=swap');
+        
+        :root {
+            --navy-deep: #070d16;
+            --navy-rich: #0A1628;
+            --navy-soft: #141e2e;
+            --gold-bright: #d4af37;
+            --gold-rich: #C8A951;
+            --gold-soft: #d4b76a;
+            --charcoal: #1a1a1a;
+            --slate: #4a5568;
+            --stone: #64748b;
+            --mist: #94a3b8;
+            --pearl: #f1f5f9;
+            --white: #ffffff;
+            --positive: #059669;
+            --negative: #dc2626;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Inter', sans-serif;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--pearl);
+            color: var(--charcoal);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            box-shadow: 0 30px 100px rgba(10, 22, 40, 0.12);
+            min-height: 100vh;
+        }
+        
+        /* HEADER */
+        .header {
+            background: linear-gradient(165deg, var(--navy-deep) 0%, var(--navy-rich) 50%, var(--navy-soft) 100%);
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-rich), transparent);
+        }
+        
+        .logo {
+            font-family: var(--font-display);
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+        
+        .page-title {
+            font-family: var(--font-display);
+            font-size: 42px;
+            font-weight: 300;
+            color: var(--gold-bright);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 30px rgba(212, 175, 55, 0.25);
+        }
+        
+        .page-subtitle {
+            font-family: var(--font-display);
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+        
+        /* PASSWORD GATE */
+        #password-gate {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            min-height: 400px;
+        }
+        
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .gate-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--navy-rich);
+            margin-bottom: 10px;
+        }
+        
+        .gate-text {
+            color: var(--slate);
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .password-form {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .password-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--gold-rich);
+        }
+        
+        .password-btn {
+            padding: 15px 30px;
+            background: var(--navy-rich);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .password-btn:hover {
+            background: var(--gold-rich);
+        }
+        
+        .error-msg {
+            color: var(--negative);
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        /* WATCHLIST CONTENT */
+        #watchlist-content {
+            display: none;
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            color: var(--navy-rich);
+            border-bottom: 2px solid var(--gold-rich);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .last-updated {
+            color: var(--stone);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+        
+        /* STOCK TABLE */
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .stock-table th {
+            background: var(--navy-rich);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+        }
+        
+        .stock-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-table tr:hover {
+            background: var(--pearl);
+        }
+        
+        .ticker {
+            font-weight: 600;
+            color: var(--navy-rich);
+            font-size: 16px;
+        }
+        
+        .company {
+            color: var(--slate);
+            font-size: 13px;
+        }
+        
+        .price {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .change-positive {
+            color: var(--positive);
+        }
+        
+        .change-negative {
+            color: var(--negative);
+        }
+        
+        .thesis {
+            font-size: 14px;
+            color: var(--slate);
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        
+        .conviction {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        
+        .conviction-high {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--positive);
+        }
+        
+        .conviction-medium {
+            background: rgba(200, 169, 81, 0.15);
+            color: #b8860b;
+        }
+        
+        .conviction-speculative {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--negative);
+        }
+        
+        /* MARKET COMMENTARY */
+        .commentary-box {
+            background: linear-gradient(135deg, var(--navy-soft) 0%, var(--navy-rich) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+        
+        .commentary-box h3 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--gold-bright);
+            margin-bottom: 15px;
+        }
+        
+        .commentary-box p {
+            line-height: 1.8;
+            color: rgba(255,255,255,0.85);
+        }
+        
+        /* SECTORS BOX - Light theme */
+        .sectors-box {
+            background: var(--pearl);
+            color: var(--charcoal);
+            padding: 25px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--gold-rich);
+        }
+        
+        .sectors-box p {
+            line-height: 1.8;
+            color: var(--charcoal);
+            margin-bottom: 15px;
+        }
+        
+        .sectors-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* FOOTER */
+        .footer {
+            background: var(--navy-deep);
+            color: rgba(255,255,255,0.5);
+            padding: 30px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .footer a {
+            color: var(--gold-soft);
+            text-decoration: none;
+        }
+        
+        /* LOGOUT */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.7);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .header { padding: 40px 20px; }
+            .page-title { font-size: 28px; letter-spacing: 4px; }
+            #watchlist-content { padding: 20px; }
+            .stock-table { font-size: 13px; }
+            .stock-table th, .stock-table td { padding: 10px; }
+            .thesis { max-width: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="logout-btn" onclick="logout()" style="display:none;" id="logout-btn">Logout</button>
+            <div class="logo">Mainsail Capital Management</div>
+            <h1 class="page-title">Premium Watchlist</h1>
+            <p class="page-subtitle">First Class Intelligence</p>
+        </div>
+        
+        <!-- PASSWORD GATE -->
+        <div id="password-gate">
+            <div class="lock-icon">🔒</div>
+            <h2 class="gate-title">Members Only</h2>
+            <p class="gate-text">Enter your premium access code to view the full watchlist and analysis.</p>
+            <div class="password-form">
+                <input type="password" class="password-input" id="password-input" placeholder="Enter code">
+                <button class="password-btn" onclick="checkPassword()">Unlock</button>
+            </div>
+            <p class="error-msg" id="error-msg">Invalid access code. Please check your welcome email.</p>
+        </div>
+        
+        <!-- WATCHLIST CONTENT -->
+        <div id="watchlist-content">
+            <p class="last-updated">Last Updated: March 8, 2026</p>
+            
+            <!-- MARKET COMMENTARY -->
+            <div class="section">
+                <h2 class="section-title">Market Commentary</h2>
+                <div class="commentary-box">
+                    <h3>The Week Ahead</h3>
+                    <p>Markets face a pivotal week with the S&P 500 testing critical support at 5,800 after last week's decline. VIX spiked to 29.49 — highest levels since 2024 — signaling genuine fear. Key focus: February CPI report (Wednesday), which could determine whether the Fed maintains its hawkish stance. Tech remains under pressure with NVDA leading declines. We're watching for any bounce opportunity but maintaining defensive posture. Gold's breakout to new highs confirms risk-off sentiment. Data center/power names (VST) showing relative strength.</p>
+                </div>
+            </div>
+            
+            <!-- HIGH CONVICTION PICKS -->
+            <div class="section">
+                <h2 class="section-title">High Conviction</h2>
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Price / Change</th>
+                            <th>Thesis</th>
+                            <th>Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="ticker">PLTR</div>
+                                <div class="company">Palantir Technologies</div>
+                            </td>
+                            <td>
+                                <div class="price">$157.16</div>
+                                <div class="change-positive">+2.94%</div>
+                            </td>
+                            <td class="thesis">AI infrastructure leader with government contracts providing stability. Strong momentum continues despite market volatility. New all-time highs. Target: $175.</td>
+                            <td><span class="conviction conviction-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ticker">VST</div>
+                                <div class="company">Vistra Corp</div>
+                            </td>
+                            <td>
+                                <div class="price">$158.65</div>
+                                <div class="change-negative">-5.23%</div>
+                            </td>
+                            <td class="thesis">Data center power demand beneficiary. 15-year PPAs with hyperscalers. Recent pullback from highs offers better entry. Strong fundamentals intact.</td>
+                            <td><span class="conviction conviction-high">High</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- MEDIUM CONVICTION -->
+            <div class="section">
+                <h2 class="section-title">Medium Conviction</h2>
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Price / Change</th>
+                            <th>Thesis</th>
+                            <th>Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="ticker">NVDA</div>
+                                <div class="company">NVIDIA Corp</div>
+                            </td>
+                            <td>
+                                <div class="price">$177.82</div>
+                                <div class="change-negative">-3.01%</div>
+                            </td>
+                            <td class="thesis">AI chip dominance intact but facing valuation pressure post-split. Stock split executed; now more accessible. Wait for stabilization before adding.</td>
+                            <td><span class="conviction conviction-medium">Medium</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="ticker">CRWD</div>
+                                <div class="company">CrowdStrike</div>
+                            </td>
+                            <td>
+                                <div class="price">$428.99</div>
+                                <div class="change-positive">+0.66%</div>
+                            </td>
+                            <td class="thesis">Cybersecurity leader showing relative strength in weak market. Strong fundamentals. Premium valuation justified by consistent execution.</td>
+                            <td><span class="conviction conviction-medium">Medium</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- SPECULATIVE -->
+            <div class="section">
+                <h2 class="section-title">Speculative</h2>
+                <table class="stock-table">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Price / Change</th>
+                            <th>Thesis</th>
+                            <th>Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="ticker">RKLB</div>
+                                <div class="company">Rocket Lab</div>
+                            </td>
+                            <td>
+                                <div class="price">$70.11</div>
+                                <div class="change-positive">+0.16%</div>
+                            </td>
+                            <td class="thesis">Space infrastructure play benefiting from defense/space spending. High risk/reward. Small position only. Watch for Neutron launch catalysts.</td>
+                            <td><span class="conviction conviction-speculative">Speculative</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- SECTORS ON WATCH -->
+            <div class="section">
+                <h2 class="section-title">Sectors on Watch</h2>
+                <div class="sectors-box">
+                    <p><strong>📈 Data Centers / Power:</strong> Continued beneficiary of AI buildout. VST, CEG showing relative strength despite market volatility. Long-term demand intact.</p>
+                    <p><strong>⚠️ Semiconductors:</strong> Under pressure as AI trade matures. NVDA, AMD facing valuation compression. Cautious near-term.</p>
+                    <p><strong>👀 Cybersecurity:</strong> Defensive growth working. CRWD, PANW showing resilience vs tech selloff.</p>
+                    <p><strong>🥇 Gold:</strong> Breaking to new highs on safe-haven demand. Consider exposure via GLD or miners.</p>
+                </div>
+            </div>
+            
+            <!-- DISCLAIMER -->
+            <div class="section">
+                <p style="font-size: 12px; color: var(--stone); line-height: 1.6; border-top: 1px solid #ddd; padding-top: 20px;">
+                    <strong>Disclaimer:</strong> This watchlist is for informational purposes only and does not constitute investment advice. Past performance does not guarantee future results. All investments carry risk of loss. Mainsail Capital Management is a registered investment advisor. Please consult with a qualified financial advisor before making investment decisions.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 Mainsail Capital Management. All rights reserved.</p>
+            <p style="margin-top: 10px;"><a href="https://captainscorner.org">← Back to Captain's Corner</a></p>
+        </div>
+    </div>
+    
+    <script>
+        // PASSWORD: PREMIUM2026
+        const ACCESS_CODE = 'PREMIUM2026';
+        
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('error-msg');
+            const gate = document.getElementById('password-gate');
+            const content = document.getElementById('watchlist-content');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            if (input === ACCESS_CODE) {
+                // Hide gate, show content
+                gate.style.display = 'none';
+                content.style.display = 'block';
+                logoutBtn.style.display = 'block';
+                errorMsg.style.display = 'none';
+                
+                // Save to session storage
+                sessionStorage.setItem('watchlistAccess', 'true');
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('watchlistAccess');
+            document.getElementById('password-gate').style.display = 'flex';
+            document.getElementById('watchlist-content').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'none';
+            document.getElementById('password-input').value = '';
+        }
+        
+        // Check if already logged in (session only)
+        if (sessionStorage.getItem('watchlistAccess') === 'true') {
+            document.getElementById('password-gate').style.display = 'none';
+            document.getElementById('watchlist-content').style.display = 'block';
+            document.getElementById('logout-btn').style.display = 'block';
+        }
+        
+        // Enter key support
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+</html>
