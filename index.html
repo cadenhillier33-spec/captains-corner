@@ -3,378 +3,3055 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captain's Corner - Weekly Market Briefing</title>
+    <title>Captain's Corner — Mainsail Capital Management</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600&display=swap');
+        
+        :root {
+            --navy-deep: #070d16;
+            --navy-rich: #0A1628;
+            --navy-soft: #141e2e;
+            --gold-bright: #d4af37;
+            --gold-rich: #C8A951;
+            --gold-soft: #d4b76a;
+            --charcoal: #1a1a1a;
+            --slate: #4a5568;
+            --stone: #64748b;
+            --mist: #94a3b8;
+            --pearl: #f1f5f9;
+            --white: #ffffff;
+            --positive: #059669;
+            --negative: #dc2626;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Inter', sans-serif;
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: Georgia, 'Times New Roman', serif;
-            background: #0A1628;
-            color: #fff;
-            line-height: 1.6;
+            font-family: var(--font-body);
+            background-color: var(--pearl);
+            color: var(--charcoal);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
         }
+        
         .container {
-            max-width: 800px;
+            max-width: 720px;
             margin: 0 auto;
-            padding: 40px 20px;
+            background: var(--white);
+            box-shadow: 0 30px 100px rgba(10, 22, 40, 0.12);
         }
-        .header {
+        
+        /* STICKY HEADER & NAVIGATION */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--navy-rich);
+            border-bottom: 2px solid var(--gold-rich);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 60px;
+        }
+        
+        .sticky-logo {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: var(--gold-bright);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        
+        .hamburger-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-rich);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger-btn:hover {
+            background: var(--gold-rich);
+        }
+        
+        .hamburger-btn:hover .hamburger-line {
+            background: var(--navy-rich);
+        }
+        
+        .hamburger-line {
+            width: 22px;
+            height: 2px;
+            background: var(--gold-bright);
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger-btn.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-btn.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        
+        /* DRAWER MENU */
+        .drawer-overlay {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(7, 13, 22, 0.9);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .drawer {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            width: 320px;
+            max-width: 85vw;
+            height: calc(100vh - 60px);
+            background: linear-gradient(180deg, var(--navy-rich) 0%, var(--navy-deep) 100%);
+            border-left: 2px solid var(--gold-rich);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow-y: auto;
+            padding: 30px 25px;
+        }
+        
+        .drawer.active {
+            transform: translateX(0);
+        }
+        
+        .drawer-header {
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            margin-bottom: 20px;
+        }
+        
+        .drawer-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--gold-bright);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .drawer-subtitle {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        .drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .drawer-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 18px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .drawer-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-rich);
+            color: var(--gold-bright);
+        }
+        
+        .drawer-link-number {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--gold-rich);
+            opacity: 0.5;
+            min-width: 30px;
+        }
+        
+        .drawer-link-text {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        
+        .drawer-section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-rich);
+            margin: 25px 0 15px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .drawer-cta {
+            margin-top: 30px;
+            padding: 18px;
+            background: var(--gold-rich);
+            color: var(--navy-rich);
             text-align: center;
-            padding: 40px 0;
-            border-bottom: 3px solid #C8A951;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        
+        .drawer-cta:hover {
+            background: var(--gold-bright);
+        }
+        
+        /* OLD NAV BAR (keep for desktop) */
+        .nav-bar {
+            background: var(--navy-rich);
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+        }
+        
+        .nav-tab {
+            padding: 18px 35px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-tab:hover {
+            color: var(--gold-soft);
+        }
+        
+        .nav-tab.active {
+            color: var(--gold-bright);
+            border-bottom-color: var(--gold-rich);
+        }
+        
+        .nav-tab.premium::after {
+            content: ' 🔒';
+            font-size: 10px;
+        }
+        
+        /* CONTENT SECTIONS */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        /* PASSWORD GATE */
+        .password-gate {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            text-align: center;
+            min-height: 400px;
+        }
+        
+        .password-gate.show {
+            display: flex;
+        }
+        
+        .lock-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .gate-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--navy-rich);
+            margin-bottom: 10px;
+        }
+        
+        .gate-text {
+            color: var(--slate);
+            margin-bottom: 30px;
+            max-width: 400px;
+        }
+        
+        .password-form {
+            display: flex;
+            gap: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .password-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: var(--gold-rich);
+        }
+        
+        .password-btn {
+            padding: 15px 30px;
+            background: var(--navy-rich);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .password-btn:hover {
+            background: var(--gold-rich);
+        }
+        
+        .error-msg {
+            color: var(--negative);
+            margin-top: 15px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        /* WATCHLIST STYLES */
+        .watchlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .last-updated {
+            color: var(--stone);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .lock-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .lock-btn:hover {
+            background: var(--pearl);
+        }
+        
+        .commentary-box {
+            background: linear-gradient(135deg, var(--navy-soft) 0%, var(--navy-rich) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 4px;
             margin-bottom: 40px;
         }
-        .header h1 {
-            font-size: 48px;
-            color: #C8A951;
-            margin-bottom: 10px;
+        
+        .commentary-box h3 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--gold-bright);
+            margin-bottom: 15px;
         }
-        .header .date {
-            font-size: 18px;
-            color: #8899ac;
+        
+        .commentary-box p {
+            line-height: 1.8;
+            color: rgba(255,255,255,0.85);
         }
-        .section {
-            background: rgba(255,255,255,0.05);
+        
+        /* FEAR/GREED BAROMETER */
+        .barometer-container {
+            background: linear-gradient(135deg, var(--navy-soft) 0%, var(--navy-rich) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
             padding: 30px;
-            margin-bottom: 30px;
-            border-radius: 8px;
+            margin: 30px 0;
         }
-        .section h2 {
-            color: #C8A951;
-            font-size: 28px;
+        
+        .barometer-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            color: var(--gold-bright);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .barometer-subtitle {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .barometer-gauge {
+            position: relative;
+            height: 40px;
+            background: linear-gradient(90deg, #dc2626 0%, #ea580c 20%, #ca8a04 40%, #65a30d 60%, #16a34a 80%, #15803d 100%);
+            border-radius: 20px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        .barometer-marker {
+            position: absolute;
+            top: -5px;
+            width: 4px;
+            height: 50px;
+            background: var(--white);
+            border: 2px solid var(--navy-rich);
+            border-radius: 2px;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: left 0.5s ease;
+        }
+        
+        .barometer-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 20px;
-            border-bottom: 2px solid #C8A951;
-            padding-bottom: 10px;
         }
-        .market-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+        
+        .barometer-reading {
+            text-align: center;
+            margin-bottom: 15px;
         }
-        .market-item {
-            background: rgba(200,169,81,0.1);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #C8A951;
+        
+        .barometer-value {
+            font-family: var(--font-display);
+            font-size: 48px;
+            color: var(--gold-bright);
+            font-weight: 600;
+            line-height: 1;
         }
-        .market-item h3 {
-            color: #C8A951;
+        
+        .barometer-status {
             font-size: 14px;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            letter-spacing: 2px;
+            margin-top: 5px;
         }
-        .market-item .price {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .market-item .change {
-            font-size: 16px;
-        }
-        .up { color: #10b981; }
-        .down { color: #ef4444; }
-        .watchlist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .watchlist-item {
-            background: rgba(255,255,255,0.05);
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid rgba(200,169,81,0.3);
-            transition: all 0.3s;
-        }
-        .watchlist-item:hover {
-            border-color: #C8A951;
-            transform: translateY(-2px);
-        }
-        .watchlist-item h3 {
-            color: #C8A951;
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        .watchlist-item .company {
-            color: #8899ac;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .score {
-            display: inline-block;
-            background: #C8A951;
-            color: #0A1628;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .fear-greed {
-            background: rgba(200,169,81,0.1);
-            padding: 20px;
-            border-radius: 8px;
+        
+        .barometer-status.extreme-fear { color: #dc2626; }
+        .barometer-status.fear { color: #ea580c; }
+        .barometer-status.neutral { color: #ca8a04; }
+        .barometer-status.greed { color: #65a30d; }
+        .barometer-status.extreme-greed { color: #16a34a; }
+        
+        .barometer-change {
             text-align: center;
-            margin: 20px 0;
-        }
-        .fear-greed .value {
-            font-size: 48px;
-            font-weight: bold;
-            color: #10b981;
-        }
-        .fear-greed .label {
-            font-size: 18px;
-            color: #8899ac;
-        }
-        .heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 14px;
-            margin-top: 20px;
-        }
-        .heatmap-item {
-            padding: 16px;
-            border-radius: 8px;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .heatmap-item h3 {
-            font-size: 15px;
-            margin-bottom: 6px;
-            color: #fff;
-        }
-        .heatmap-item p {
             font-size: 13px;
-            color: rgba(255,255,255,0.9);
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 20px;
         }
-        .heat-hot { background: linear-gradient(135deg, #14532d, #10b981); }
-        .heat-warm { background: linear-gradient(135deg, #3f6212, #84cc16); }
-        .heat-neutral { background: linear-gradient(135deg, #334155, #64748b); }
-        .heat-cool { background: linear-gradient(135deg, #7c2d12, #f97316); }
-        .heat-risk { background: linear-gradient(135deg, #7f1d1d, #ef4444); }
-        .intelligence-links { list-style: none; }
-        .intelligence-links li {
+        
+        .barometer-take {
+            background: rgba(255,255,255,0.05);
+            border-left: 3px solid var(--gold-rich);
+            padding: 15px 20px;
+            font-style: italic;
+            color: rgba(255,255,255,0.85);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .barometer-take strong {
+            color: var(--gold-bright);
+            font-style: normal;
+        }
+        
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        
+        .stock-table th {
+            background: var(--navy-rich);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 11px;
+        }
+        
+        .stock-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stock-table tr:hover {
+            background: var(--pearl);
+        }
+        
+        .ticker {
+            font-weight: 600;
+            color: var(--navy-rich);
+            font-size: 15px;
+        }
+        
+        .company {
+            color: var(--slate);
+            font-size: 12px;
+        }
+        
+        .conviction {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        
+        .conviction-high {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--positive);
+        }
+        
+        .conviction-medium {
+            background: rgba(200, 169, 81, 0.15);
+            color: #b8860b;
+        }
+        
+        .conviction-speculative {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--negative);
+        }
+        
+        .sectors-box {
+            background: var(--pearl);
+            color: var(--charcoal);
+            padding: 25px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--gold-rich);
+        }
+        
+        .sectors-box p {
+            line-height: 1.8;
             margin-bottom: 15px;
-            padding-left: 20px;
+        }
+        
+        .sectors-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* HEADER */
+        .header {
+            background: linear-gradient(165deg, var(--navy-deep) 0%, var(--navy-rich) 50%, var(--navy-soft) 100%);
+            padding: 80px 50px;
+            text-align: center;
             position: relative;
         }
-        .intelligence-links li:before {
-            content: "→";
+        
+        .header::before {
+            content: '';
             position: absolute;
-            left: 0;
-            color: #C8A951;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-rich), transparent);
         }
-        .intelligence-links a {
-            color: #C8A951;
-            text-decoration: none;
+        
+        .logo {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 400;
         }
-        .intelligence-links a:hover { text-decoration: underline; }
-        .disclaimer {
-            background: rgba(255,255,255,0.05);
-            padding: 20px;
+        
+        .newsletter-title {
+            font-family: var(--font-display);
+            font-size: 52px;
+            font-weight: 300;
+            color: var(--gold-bright);
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 30px rgba(212, 175, 55, 0.25);
+            margin-bottom: 10px;
+        }
+        
+        .newsletter-subtitle {
+            font-family: var(--font-display);
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+        
+        .date-badge {
+            display: inline-block;
+            padding: 15px 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.25);
             margin-top: 30px;
-            border-radius: 8px;
+        }
+        
+        .date-range {
             font-size: 12px;
-            color: #8899ac;
-            text-align: center;
+            color: rgba(255,255,255,0.85);
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-        .footer {
-            text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid rgba(200,169,81,0.3);
-            margin-top: 40px;
+        
+        /* CONTENT */
+        .content { padding: 60px 50px; }
+        
+        .section {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #e2e8f0;
         }
-        .footer p {
-            color: #8899ac;
+        
+        .section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 30px;
+        }
+        
+        .section-number {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--gold-rich);
+            opacity: 0.3;
+            margin-right: 20px;
+            line-height: 1;
+        }
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--navy-rich);
+            letter-spacing: 1px;
+        }
+        
+        .section-subtitle {
+            font-size: 13px;
+            color: var(--stone);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+        
+        /* HORIZON SCAN */
+        .horizon-text {
+            font-size: 16px;
+            line-height: 1.9;
+            color: var(--slate);
+            margin-bottom: 25px;
+        }
+        
+        .horizon-text strong {
+            color: var(--navy-rich);
+            font-weight: 600;
+        }
+        
+        /* TABLES */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
             font-size: 14px;
         }
-        @media (max-width: 600px) {
-            .header h1 { font-size: 36px; }
-            .market-grid, .watchlist-grid, .heatmap-grid { grid-template-columns: 1fr; }
+        
+        .data-table th {
+            text-align: left;
+            padding: 15px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--stone);
+            border-bottom: 2px solid var(--navy-rich);
+            background: var(--pearl);
+        }
+        
+        .data-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(200, 169, 81, 0.03);
+        }
+        
+        .asset-name {
+            font-weight: 600;
+            color: var(--navy-rich);
+        }
+        
+        .asset-link {
+            color: var(--navy-rich);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--gold-rich);
+            transition: all 0.2s ease;
+        }
+        
+        .asset-link:hover {
+            color: var(--gold-rich);
+            border-bottom: 1px solid var(--gold-rich);
+        }
+        
+        .delta-positive { color: var(--positive); font-weight: 600; }
+        .delta-negative { color: var(--negative); font-weight: 600; }
+        
+        .outlook {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+        
+        .outlook-bullish {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--positive);
+        }
+        
+        .outlook-bearish {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--negative);
+        }
+        
+        .outlook-neutral {
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--stone);
+        }
+        
+        /* LOCKED PICK */
+        .locked-pick {
+            margin: 30px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--navy-rich) 0%, var(--navy-deep) 100%);
+            border: 1px solid var(--gold-rich);
+            text-align: center;
+        }
+        
+        .locked-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold-bright);
+            margin-bottom: 15px;
+        }
+        
+        .locked-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            color: var(--white);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .locked-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        .locked-cta {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--gold-rich);
+            color: var(--navy-rich);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+        
+        /* PREMIUM SECTION */
+        .premium-section {
+            background: linear-gradient(135deg, var(--navy-rich) 0%, var(--navy-deep) 100%);
+            margin: 0 -50px -60px -50px;
+            padding: 60px 50px;
+        }
+        
+        .premium-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .premium-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--gold-rich);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold-bright);
+            margin-bottom: 20px;
+        }
+        
+        .premium-title {
+            font-family: var(--font-display);
+            font-size: 36px;
+            color: var(--white);
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+        
+        .premium-tagline {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: var(--gold-soft);
+            font-style: italic;
+        }
+        
+        .premium-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .premium-feature {
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .premium-feature h4 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: var(--gold-soft);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .premium-feature p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+        }
+        
+        .premium-cta {
+            text-align: center;
+            padding: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .premium-price {
+            font-family: var(--font-display);
+            font-size: 42px;
+            color: var(--gold-bright);
+            margin-bottom: 10px;
+        }
+        
+        .premium-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: var(--gold-rich);
+            color: var(--navy-rich);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            margin-top: 25px;
+        }
+        
+        /* LUXURY SECTION */
+        .luxury-section {
+            background: linear-gradient(135deg, #faf9f7 0%, var(--white) 100%);
+            padding: 40px;
+            margin: 40px 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .luxury-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .luxury-icon {
+            font-size: 28px;
+        }
+        
+        .luxury-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            color: var(--navy-rich);
+        }
+        
+        .luxury-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--slate);
+        }
+        
+        .luxury-content strong {
+            color: var(--navy-rich);
+        }
+        
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(180deg, var(--navy-rich) 0%, var(--navy-deep) 100%);
+            padding: 60px 50px;
+            text-align: center;
+        }
+        
+        .footer::before {
+            content: '';
+            display: block;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-rich), transparent);
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 16px;
+            color: var(--gold-bright);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        
+        .footer-tagline {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--gold-bright);
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-address {
+            font-size: 13px;
+            line-height: 2;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 30px;
+        }
+        
+        .sign-off {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: var(--gold-soft);
+            font-style: italic;
+            margin-top: 30px;
+        }
+        
+        .disclaimer {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            max-width: 550px;
+            margin: 30px auto 0;
+            font-size: 10px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        /* CONTRARIAN BOX */
+        .contrarian-box {
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(200, 169, 81, 0.08);
+            border-left: 4px solid var(--gold-rich);
+        }
+        
+        .contrarian-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-rich);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .contrarian-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--slate);
+            font-style: italic;
+        }
+        
+        /* MATH FORMULA */
+        .formula-box {
+            background: var(--pearl);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 640px) {
+            .sticky-header { height: 56px; padding: 0 15px; }
+            .sticky-logo { font-size: 15px; letter-spacing: 1px; }
+            .drawer { width: 100%; max-width: 100%; border-left: none; border-top: 2px solid var(--gold-rich); }
+            .header { padding: 50px 25px; }
+            .newsletter-title { font-size: 36px; letter-spacing: 5px; }
+            .content { padding: 40px 25px; overflow-x: hidden; }
+            .premium-grid { grid-template-columns: 1fr; }
+            .premium-section { margin: 0 -25px -40px -25px; padding: 40px 25px; }
+            .section-number { font-size: 36px; }
+            .whatif-grid { grid-template-columns: 1fr !important; gap: 15px; }
+            .whatif-card { padding: 20px; }
+            .watchlist-grid { grid-template-columns: 1fr !important; gap: 15px; }
+            .watchlist-item { padding: 20px; }
+            .watchlist-ticker { font-size: 28px; }
+            .watchlist-signal { font-size: 10px; padding: 6px 10px; }
+            .heatmap-grid { grid-template-columns: 1fr !important; gap: 10px; }
+            .heatmap-item { padding: 20px 15px; }
+            .heatmap-sector { font-size: 12px; }
+            .heatmap-status { font-size: 13px; }
+            .container { max-width: 100vw; overflow-x: hidden; }
+            .password-form { flex-direction: column; gap: 15px; padding: 0 20px; }
+            .password-input { width: 100%; box-sizing: border-box; }
+            .password-btn { width: 100%; box-sizing: border-box; }
+            .gate-text { padding: 0 20px; }
+        }
+        
+        /* WHAT IF SCENARIOS */
+        .whatif-section {
+            background: linear-gradient(135deg, #faf9f7 0%, var(--white) 100%);
+            border: 1px solid #e2e8f0;
+            padding: 35px;
+            margin: 30px 0;
+        }
+        
+        .whatif-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--navy-rich);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .whatif-title::before {
+            content: '🔮';
+            font-size: 24px;
+        }
+        
+        .whatif-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .whatif-card {
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .whatif-card:hover {
+            border-color: var(--gold-rich);
+            box-shadow: 0 10px 30px rgba(200, 169, 81, 0.1);
+        }
+        
+        .whatif-scenario {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold-rich);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .whatif-question {
+            font-family: var(--font-display);
+            font-size: 16px;
+            color: var(--navy-rich);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .whatif-impact {
+            font-size: 14px;
+            color: var(--slate);
+            line-height: 1.6;
+        }
+        
+        .whatif-impact strong {
+            color: var(--navy-rich);
+        }
+        
+        /* MACRO LENS */
+        .macro-lens {
+            background: var(--navy-rich);
+            padding: 35px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .macro-lens::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-rich), transparent);
+        }
+        
+        .macro-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .macro-icon {
+            font-size: 28px;
+        }
+        
+        .macro-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            color: var(--gold-bright);
+            letter-spacing: 2px;
+        }
+        
+        .macro-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .macro-content {
+            color: rgba(255,255,255,0.85);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        
+        .macro-content strong {
+            color: var(--gold-soft);
+        }
+        
+        .macro-highlight {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 3px solid var(--gold-rich);
+        }
+        
+        .macro-highlight-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-bright);
+            margin-bottom: 10px;
+        }
+        
+        .macro-highlight-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            font-style: italic;
+        }
+        
+        /* CAPTAIN'S WATCHLIST */
+        .watchlist-section {
+            background: linear-gradient(180deg, var(--white) 0%, #faf9f7 100%);
+            border: 2px solid var(--gold-rich);
+            padding: 35px;
+            margin: 30px 0;
+        }
+        
+        .watchlist-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+        }
+        
+        .watchlist-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            color: var(--navy-rich);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .watchlist-title::before {
+            content: '⚓';
+            font-size: 26px;
+            color: var(--gold-rich);
+        }
+        
+        .watchlist-badge {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-rich);
+            padding: 8px 16px;
+            border: 1px solid var(--gold-rich);
+        }
+        
+        .watchlist-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .watchlist-item {
+            background: var(--white);
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .watchlist-item:hover {
+            border-color: var(--gold-rich);
+            transform: translateY(-2px);
+        }
+        
+        .watchlist-rank {
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            background: var(--gold-rich);
+            color: var(--navy-rich);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            letter-spacing: 1px;
+        }
+        
+        .watchlist-ticker {
+            font-family: var(--font-display);
+            font-size: 28px;
+            color: var(--navy-rich);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        
+        .watchlist-ticker a {
+            color: var(--navy-rich);
+            text-decoration: none;
+            border-bottom: 2px solid var(--gold-rich);
+            transition: all 0.2s ease;
+        }
+        
+        .watchlist-ticker a:hover {
+            color: var(--gold-rich);
+        }
+        
+        .watchlist-name {
+            font-size: 13px;
+            color: var(--stone);
+            margin-bottom: 15px;
+        }
+        
+        .watchlist-signal {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .watchlist-signal.whale {
+            background: rgba(200, 169, 81, 0.15);
+            color: var(--gold-rich);
+            border: 1px solid rgba(200, 169, 81, 0.3);
+        }
+        
+        .watchlist-signal.volume {
+            background: rgba(5, 150, 105, 0.15);
+            color: var(--positive);
+            border: 1px solid rgba(5, 150, 105, 0.3);
+        }
+        
+        .watchlist-signal.institutional {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .watchlist-note {
+            font-size: 13px;
+            color: var(--slate);
+            line-height: 1.5;
+        }
+        
+        /* GLOBAL SENTIMENT HEATMAP */
+        .heatmap-section {
+            background: var(--navy-rich);
+            padding: 40px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .heatmap-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-rich), transparent);
+        }
+        
+        .heatmap-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .heatmap-icon {
+            font-size: 28px;
+        }
+        
+        .heatmap-title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            color: var(--gold-bright);
+            letter-spacing: 2px;
+        }
+        
+        .heatmap-subtitle {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .heatmap-item {
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .heatmap-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .heatmap-sector {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .heatmap-status {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .heatmap-hot {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0.15) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .heatmap-hot .heatmap-sector,
+        .heatmap-hot .heatmap-status {
+            color: #86efac;
+        }
+        
+        .heatmap-warming {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.3) 0%, rgba(52, 211, 153, 0.15) 100%);
+            border: 1px solid rgba(52, 211, 153, 0.4);
+        }
+
+        .heatmap-warming .heatmap-sector,
+        .heatmap-warming .heatmap-status {
+            color: #6ee7b7;
+        }
+        
+        .heatmap-neutral {
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.3) 0%, rgba(148, 163, 184, 0.15) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+        }
+        
+        .heatmap-neutral .heatmap-sector,
+        .heatmap-neutral .heatmap-status {
+            color: #cbd5e1;
+        }
+        
+        .heatmap-cooling {
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.3) 0%, rgba(248, 113, 113, 0.15) 100%);
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+
+        .heatmap-cooling .heatmap-sector,
+        .heatmap-cooling .heatmap-status {
+            color: #fca5a5;
+        }
+
+        .heatmap-cold {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(220, 38, 38, 0.15) 100%);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+        }
+
+        .heatmap-cold .heatmap-sector,
+        .heatmap-cold .heatmap-status {
+            color: #fca5a5;
+        }
+        
+        .heatmap-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        
+        /* FIRST CLASS POPUP */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 13, 22, 0.95);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(12px);
+        }
+        
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup-container {
+            background: linear-gradient(165deg, var(--navy-deep) 0%, var(--navy-rich) 50%, var(--navy-soft) 100%);
+            border: 2px solid var(--gold-rich);
+            max-width: 480px;
+            width: 85%;
+            max-height: 80vh;
+            padding: 40px 35px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 80px rgba(200, 169, 81, 0.2);
+            transform: translateY(40px) scale(0.95);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow-y: auto;
+        }
+        
+        .popup-overlay.active .popup-container {
+            transform: translateY(0) scale(1);
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-rich);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--gold-bright);
+            transition: all 0.3s ease;
+        }
+        
+        .popup-close:hover {
+            background: var(--gold-rich);
+            color: var(--navy-rich);
+        }
+        
+        .popup-badge {
+            display: inline-block;
+            padding: 10px 28px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--gold-rich);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--gold-bright);
+            margin-bottom: 30px;
+        }
+        
+        .popup-title {
+            font-family: var(--font-display);
+            font-size: 38px;
+            font-weight: 400;
+            color: var(--white);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .popup-subtitle {
+            font-size: 15px;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.8;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+        
+        .popup-features {
+            text-align: left;
+            margin: 35px 0;
+            padding: 30px;
+            background: rgba(255,255,255,0.02);
+            border-left: 3px solid var(--gold-rich);
+        }
+        
+        .popup-feature {
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            font-weight: 300;
+        }
+        
+        .popup-feature:last-child {
+            margin-bottom: 0;
+        }
+        
+        .popup-feature::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--gold-bright);
+            font-weight: 400;
+        }
+        
+        .popup-price {
+            font-family: var(--font-display);
+            font-size: 48px;
+            color: var(--gold-bright);
+            margin: 30px 0 8px;
+            letter-spacing: 2px;
+        }
+        
+        .popup-price span {
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .popup-price-note {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+        
+        .popup-cta {
+            display: inline-block;
+            padding: 20px 55px;
+            background: var(--gold-rich);
+            color: var(--navy-rich);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 40px rgba(200, 169, 81, 0.25);
+        }
+        
+        .popup-cta:hover {
+            background: var(--gold-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 50px rgba(200, 169, 81, 0.35);
+        }
+        
+        .popup-limited {
+            display: block;
+            margin-top: 20px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        /* STICKY FIRST CLASS BANNER */
+        .sticky-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--navy-deep) 0%, var(--navy-rich) 50%, var(--navy-soft) 100%);
+            border-top: 2px solid var(--gold-rich);
+            padding: 20px 40px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            box-shadow: 0 -15px 50px rgba(0,0,0,0.4);
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .sticky-banner.visible {
+            transform: translateY(0);
+        }
+        
+        .sticky-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .sticky-text {
+            font-family: var(--font-display);
+            font-size: 22px;
+            color: var(--white);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .sticky-text span {
+            color: var(--gold-bright);
+        }
+        
+        .sticky-btn {
+            padding: 14px 35px;
+            background: var(--gold-rich);
+            color: var(--navy-rich);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .sticky-btn:hover {
+            background: var(--gold-bright);
+        }
+        
+        .sticky-close {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-rich);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gold-bright);
+            transition: all 0.3s ease;
+        }
+        
+        .sticky-close:hover {
+            background: var(--gold-rich);
+            color: var(--navy-rich);
+        }
+        
+        @media (max-width: 768px) {
+            .popup-overlay {
+                align-items: center;
+                padding: 8px;
+            }
+            .popup-container {
+                padding: 18px 14px;
+                max-width: 100%;
+                width: calc(100% - 16px);
+                max-height: 55vh;
+                min-height: auto;
+                overflow-y: auto;
+                margin: 0 auto;
+                border-width: 1px;
+            }
+            .popup-badge {
+                font-size: 8px;
+                padding: 3px 8px;
+                margin-bottom: 8px;
+            }
+            .popup-title { 
+                font-size: 16px; 
+                letter-spacing: 1.5px; 
+                margin-bottom: 6px;
+            }
+            .popup-subtitle { 
+                font-size: 10px; 
+                line-height: 1.3;
+                margin-bottom: 8px;
+            }
+            .popup-features { 
+                margin: 8px 0; 
+                text-align: left;
+                max-height: 100px;
+                overflow-y: auto;
+            }
+            .popup-feature {
+                font-size: 9px;
+                padding: 3px 0;
+                padding-left: 12px;
+                margin: 2px 0;
+            }
+            .popup-feature::before {
+                width: 5px;
+                left: 0;
+            }
+            .popup-price { 
+                font-size: 22px; 
+                margin: 8px 0 2px;
+            }
+            .popup-price span {
+                font-size: 11px;
+            }
+            .popup-price-note {
+                font-size: 9px;
+                margin-bottom: 10px;
+            }
+            .popup-cta {
+                padding: 8px 16px;
+                font-size: 9px;
+                letter-spacing: 1px;
+                margin: 6px 0;
+            }
+            .popup-limited {
+                font-size: 7px;
+                letter-spacing: 0.5px;
+                margin-top: 6px;
+            }
+            .popup-close {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+                top: 6px;
+                right: 6px;
+            }
+            .sticky-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            .sticky-text { font-size: 18px; }
+            .sticky-banner { padding: 25px 20px; }
+            .sticky-close {
+                top: 10px;
+                right: 10px;
+                transform: none;
+            }
+        }
+        
+        /* Extra small screens / partial windows */
+        @media (max-width: 480px), (max-height: 600px) {
+            .popup-container {
+                padding: 15px 12px;
+                max-height: 50vh;
+                width: calc(100% - 12px);
+            }
+            .popup-title {
+                font-size: 15px;
+            }
+            .popup-subtitle {
+                font-size: 9px;
+            }
+            .popup-features {
+                max-height: 80px;
+            }
+            .popup-feature {
+                font-size: 8px;
+            }
+        }
+        
+        /* PRINT STYLES - Professional PDF output */
+        @media print {
+            @page {
+                margin: 0.5in;
+                size: auto;
+            }
+            
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* Hide file URL footer */
+            .footer-url,
+            .print-footer,
+            .file-path {
+                display: none !important;
+            }
+            
+            /* Show both newsletter and premium sections */
+            .content-section {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                position: relative !important;
+                page-break-before: always;
+            }
+            
+            #newsletter-section {
+                page-break-before: auto;
+            }
+            
+            /* Remove gray backgrounds in print */
+            .section {
+                background: white !important;
+            }
+            
+            /* Ensure clean backgrounds */
+            * {
+                background-color: transparent !important;
+            }
+            
+            /* Hide popups and sticky banners */
+            .popup-overlay,
+            .sticky-banner,
+            .nav-bar {
+                display: none !important;
+            }
+            
+            /* Make sure content is visible */
+            main.content {
+                display: block !important;
+            }
+            
+            /* Show premium content, hide password gate in print */
+            .password-gate {
+                display: none !important;
+            }
+            
+            #watchlist-content {
+                display: block !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>⚓ Captain's Corner</h1>
-            <div class="date">Week of April 27 — May 1, 2026</div>
-        </div>
-
-        <div class="section">
-            <h2>🎯 The Ledger</h2>
-            <div class="market-grid">
-                <div class="market-item">
-                    <h3>S&amp;P 500</h3>
-                    <div class="price">7,126.06</div>
-                    <div class="change up">▲ +3.48% weekly</div>
-                </div>
-                <div class="market-item">
-                    <h3>10Y Treasury</h3>
-                    <div class="price">4.25%</div>
-                    <div class="change down">▼ -1.19% weekly</div>
-                </div>
-                <div class="market-item">
-                    <h3>Gold</h3>
-                    <div class="price">$4,811.30</div>
-                    <div class="change up">▲ +0.24% weekly</div>
-                </div>
-                <div class="market-item">
-                    <h3>Bitcoin</h3>
-                    <div class="price">$75,179</div>
-                    <div class="change up">▲ +0.04% weekly</div>
-                </div>
-                <div class="market-item">
-                    <h3>WTI Crude</h3>
-                    <div class="price">$87.48</div>
-                    <div class="change down">▼ -4.17% weekly</div>
-                </div>
-                <div class="market-item">
-                    <h3>USD Index</h3>
-                    <div class="price">98.2</div>
-                    <div class="change up">▲ +0.11% weekly</div>
-                </div>
-                <div class="market-item">
-                    <h3>VIX</h3>
-                    <div class="price">19.43</div>
-                    <div class="change up">▲ +5.83% weekly</div>
-                </div>
+    <!-- FIRST CLASS POPUP -->
+    <div class="popup-overlay" id="firstClassPopup">
+        <div class="popup-container">
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+            <div class="popup-badge">First Class Access</div>
+            <h2 class="popup-title">First Class Access</h2>
+            <p class="popup-subtitle">You are invited to join our exclusive intelligence circle. Get the edge with early briefings, AI-driven signals, full watchlist access, and custom research.</p>
+            <div class="popup-features">
+                <div class="popup-feature">The Black Box — AI-driven whale tracking and institutional flow signals</div>
+                <div class="popup-feature">Early Briefing — Captain's Corner delivered 24 hours before public release</div>
+                <div class="popup-feature">Full Watchlist — 10+ names with entry/exit targets and conviction ratings</div>
+                <div class="popup-feature">Ask The Captain — AI-powered custom research briefs on any ticker, on demand</div>
+                <div class="popup-feature">10% donated to the No Kid Hungry Foundation</div>
             </div>
-            <div class="fear-greed">
-                <div class="value">29</div>
-                <div class="label">Fear &amp; Greed Index: Fear</div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>🌅 The Horizon Scan</h2>
-            <p style="margin-bottom: 15px;"><strong>The market is starting this week from a position of strength, but not comfort:</strong> the S&amp;P 500 is still sitting near records, yet the mood underneath the surface is less relaxed than the headline index suggests. Reuters' latest week-ahead framing is basically this: stocks have shrugged off war nerves and higher rates, now earnings have to prove that shrug was earned.</p>
-            <p style="margin-bottom: 15px;"><strong>That makes this a reality-check week.</strong> A heavy slate of corporate reports is landing while Treasury yields remain elevated and volatility has perked back up. The combination matters. Investors can tolerate higher rates when profits look durable. They get a lot less charitable when guidance starts sounding defensive.</p>
-            <p style="margin-bottom: 15px;"><strong>The other key pressure point is the consumer.</strong> Census shows March retail sales hit Tuesday morning at 8:30 a.m. ET. If spending holds up, the soft-landing narrative stays alive and the tape likely keeps rewarding quality growth. If retail sales wobble, the market may have to confront whether higher borrowing costs are finally hitting demand.</p>
-            <p><strong>Why this week matters:</strong> it is not just about whether companies beat. It is about whether management teams and incoming data together can justify record valuations, still-firm rates, and a market that has already priced in a lot of good news.</p>
-        </div>
-
-        <div class="section">
-            <h2>🎪 What If?</h2>
-            <p style="margin-bottom: 15px;"><strong>Scenario 1, earnings do the heavy lifting:</strong> If large-cap results beat and guidance stays constructive, investors probably keep pressing leadership names and the index can grind higher despite elevated rates.</p>
-            <p style="margin-bottom: 15px;"><strong>Scenario 2, retail sales come in soft:</strong> Tuesday's report is the cleanest macro gut-check of the week. A weaker number would raise fresh questions about the consumer and make the market far pickier on expensive growth.</p>
-            <p style="margin-bottom: 15px;"><strong>Scenario 3, Fed tone adds friction:</strong> Governor Waller speaks Tuesday afternoon. If policy language leans hawkish while yields stay sticky, that can tighten the market's tolerance for any guidance miss.</p>
-            <p><strong>Scenario 4, volatility wakes up before fundamentals do:</strong> With the VIX back near 20 and positioning already optimistic, even decent results may not be enough if expectations have drifted too high. In that setup, the market does not need disaster, it just needs disappointment.</p>
-        </div>
-
-        <div class="section">
-            <h2>🌍 Global Sentiment Heatmap</h2>
-            <p style="margin-bottom: 10px; color: #8899ac;">Quick read: green means leadership, gray means mixed, orange means caution, and red means the market still has a trap door under a few sectors.</p>
-            <div class="heatmap-grid">
-                <div class="heatmap-item heat-hot">
-                    <h3>Large-Cap Tech — Hot</h3>
-                    <p>Still the leadership group, but this week results and guidance need to justify the premium.</p>
-                </div>
-                <div class="heatmap-item heat-warm">
-                    <h3>Financials / Earnings Plays — Warm</h3>
-                    <p>Earnings have been decent, but the group now needs follow-through rather than just relief.</p>
-                </div>
-                <div class="heatmap-item heat-warm">
-                    <h3>AI Infrastructure / Power — Warm</h3>
-                    <p>The secular story remains real, though entry discipline matters more after the rebound.</p>
-                </div>
-                <div class="heatmap-item heat-neutral">
-                    <h3>Industrials — Neutral</h3>
-                    <p>Economic resilience helps, but any softening in demand could pressure cyclical expectations quickly.</p>
-                </div>
-                <div class="heatmap-item heat-cool">
-                    <h3>Energy — Cool</h3>
-                    <p>Crude has bounced around enough to keep the cash-flow case alive, but leadership has faded for now.</p>
-                </div>
-                <div class="heatmap-item heat-risk">
-                    <h3>Speculative Small-Caps — Risk</h3>
-                    <p>If yields stay firm and retail sales disappoint, these are still the first names likely to get punished.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>🔗 Intelligence Links</h2>
-            <ul class="intelligence-links">
-                <li><a href="https://www.reuters.com/business/wall-st-week-ahead-surging-record-high-us-stocks-wade-deeper-into-earnings-2026-04-20/">Reuters: Record-high U.S. stocks wade deeper into earnings season</a> — Best high-level framing for the week: strong tape, heavy results, and less room for excuses.</li>
-                <li><a href="https://www.reuters.com/markets/us/wall-streets-earnings-fantasies-may-soon-get-harsh-reality-check-2026-04-13/">Reuters: Wall Street's earnings fantasies may soon get a reality check</a> — Good perspective on why valuations now need actual proof.</li>
-                <li><a href="https://www.census.gov/retail/release_schedule.html">Census: Monthly Retail Trade release schedule</a> — Confirms March retail sales arrives Tuesday, April 21, at 8:30 a.m. ET.</li>
-                <li><a href="https://www.federalreserve.gov/newsevents/2026-04.htm">Federal Reserve: April 2026 calendar</a> — Confirms Governor Waller speaks Tuesday, April 21, at 2:30 p.m. ET and the April 28 to 29 FOMC meeting is next week.</li>
-                <li><a href="https://www.bls.gov/schedule/news_release/cpi.htm">BLS: CPI release schedule</a> — Confirms the next CPI release is May 12, which keeps this week's focus on earnings, retail sales, and Fed tone instead of inflation day drama.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>🧲 Stocks We're Watching</h2>
-            <p style="margin-bottom: 20px; color: #8899ac;">The setup this week is a barbell: stay with durable AI and infrastructure winners, but keep a shorter leash on anything that still needs flawless execution to justify the multiple.</p>
-            <div class="watchlist-grid">
-                <div class="watchlist-item">
-                    <h3>PLTR</h3>
-                    <div class="company">Palantir Technologies</div>
-                    <div style="margin-bottom: 10px; color: #8899ac; font-size: 13px;">Price: $143.09 | Next expected earnings: May 4</div>
-                    <span class="score">High Conviction</span>
-                    <p style="margin-top: 12px; font-size: 14px; color: #d7deea;">The core thesis is still intact: government and enterprise buyers continue treating Palantir as a real operating platform, not a science project. The risk is that a stock this loved into earnings needs another clean beat-and-raise, not just a decent quarter.</p>
-                </div>
-                <div class="watchlist-item">
-                    <h3>VST</h3>
-                    <div class="company">Vistra Corp</div>
-                    <div style="margin-bottom: 10px; color: #8899ac; font-size: 13px;">Price: $164.35 | Next expected earnings: May 7</div>
-                    <span class="score">High Conviction</span>
-                    <p style="margin-top: 12px; font-size: 14px; color: #d7deea;">The AI-power thesis still works, and Vistra remains one of the cleaner public ways to express it. What changed is the entry discipline: after the run and the Cogentrix expansion narrative, higher rates or a rotation out of power winners could create sharper pullbacks.</p>
-                </div>
-                <div class="watchlist-item">
-                    <h3>NVDA</h3>
-                    <div class="company">NVIDIA Corp</div>
-                    <div style="margin-bottom: 10px; color: #8899ac; font-size: 13px;">Price: $208.27 | Next expected earnings: May 20</div>
-                    <span class="score">Medium Conviction</span>
-                    <p style="margin-top: 12px; font-size: 14px; color: #d7deea;">Still the flagship AI semiconductor and still the benchmark for the entire stack. Demand remains the bull case, but export-control headlines and a market priced for near-perfection mean this is a hold-your-nose-on-dips name, not a valuation bargain.</p>
-                </div>
-                <div class="watchlist-item">
-                    <h3>CRWD</h3>
-                    <div class="company">CrowdStrike</div>
-                    <div style="margin-bottom: 10px; color: #8899ac; font-size: 13px;">Price: $448.13 | Next expected earnings: June 9</div>
-                    <span class="score">Medium Conviction</span>
-                    <p style="margin-top: 12px; font-size: 14px; color: #d7deea;">Cybersecurity is still one of the last budgets enterprises want to cut, and CrowdStrike remains a platform consolidator in that spend bucket. The thesis only weakens if growth slips enough to make the valuation look indulgent, so we prefer scaling rather than swinging.</p>
-                </div>
-                <div class="watchlist-item">
-                    <h3>RKLB</h3>
-                    <div class="company">Rocket Lab</div>
-                    <div style="margin-bottom: 10px; color: #8899ac; font-size: 13px;">Price: $79.68 | Next expected earnings: May 7</div>
-                    <span class="score">Speculative</span>
-                    <p style="margin-top: 12px; font-size: 14px; color: #d7deea;">The upside case is still tied to launch cadence, backlog conversion, and continued progress toward Neutron. The reason it stays speculative is simple: until the larger vehicle timeline de-risks further, this one can move like a dream and then punch you in the face.</p>
-                </div>
-            </div>
-            <p style="margin-top: 18px; font-size: 13px; color: #8899ac;"><strong>Sectors on Watch:</strong> Mega-cap AI platforms and semis, independent power/utilities linked to data-center demand, cybersecurity, and selective space/aerospace remain the highest-conviction pockets. We are less interested in broad beta than in businesses with visible demand and pricing power.</p>
-            <p style="margin-top: 18px; font-size: 13px; color: #8899ac;"><strong>Bottom line:</strong> the winners still look like winners, but this week’s macro stack and mega-cap earnings mean position sizing matters almost as much as stock selection.</p>
-            <p style="margin-top: 20px; font-size: 13px; color: #8899ac;">Access full watchlist with detailed thesis at <a href="https://captainscorner.org" style="color: #C8A951;">captainscorner.org</a> (Code: mainsail26)</p>
-            <p style="margin-top: 8px; font-size: 12px; color: #8899ac;">Last Updated: April 26, 2026</p>
-        </div>
-
-        <div class="section">
-            <h2>🗓️ The Week Ahead</h2>
-            <p style="margin-bottom: 15px;"><strong>Monday:</strong> The market opens after a fast rally into record territory. When a tape gets this extended, early price action matters less than whether dip buyers still show up on the first piece of bad news.</p>
-            <p style="margin-bottom: 15px;"><strong>Tuesday:</strong> Consumer Confidence lands at 10:00 a.m. ET, and that matters because the consumer has been doing more of the macro heavy lifting than many want to admit. Tuesday also begins the week’s first real wave of mega-cap earnings, so sentiment can shift fast.</p>
-            <p style="margin-bottom: 15px;"><strong>Wednesday:</strong> The April 28–29 FOMC meeting concludes. Even if rates stay put, traders will parse every line for how comfortable the Fed is with growth, inflation, and the recent easing in financial conditions.</p>
-            <p style="margin-bottom: 15px;"><strong>Thursday:</strong> This is the big one. First-quarter GDP, March Personal Income and Outlays, and the Fed’s preferred inflation gauge in PCE all hit at 8:30 a.m. ET, alongside the Employment Cost Index. If growth stays firm and inflation behaves, the rally has a clean argument. If either slips, expensive leadership gets tested immediately.</p>
-            <p style="margin-bottom: 15px;"><strong>Friday:</strong> By the end of the week, we should know whether the market still deserves the breakout. The healthiest outcome is simple: strong earnings reactions, contained yields, and no ugly surprise from Thursday’s macro stack.</p>
-            <p><strong>Simple takeaway:</strong> this is a confirmation week for both the soft-landing story and the AI-led leadership trade. Respect the momentum, but do not confuse momentum with immunity.</p>
-        </div>
-
-        <div class="section">
-            <h2>⚔️ Strategic Notes</h2>
-            <p style="margin-bottom: 15px;"><strong>Risk Management:</strong> Respect the trend, but tighten standards. When the market is priced for good news, mediocre news can still hurt.</p>
-            <p style="margin-bottom: 15px;"><strong>Positioning:</strong> Favor quality balance sheets, durable earnings stories, and areas where demand does not depend on a perfect macro backdrop.</p>
-            <p style="margin-bottom: 15px;"><strong>Macro Lens:</strong> Rates are not collapsing, volatility is not asleep, and the consumer report still matters. That keeps this from being a carefree melt-up.</p>
-            <p><strong>Portfolio Posture:</strong> Stay constructive, but selective. Let earnings reactions and Tuesday's retail-sales read tell you whether to press or preserve capital.</p>
-        </div>
-
-        <div class="disclaimer">
-            <p><strong>Disclaimer:</strong> For informational purposes only. Not investment advice. Past performance does not guarantee future results. Captain's Corner is produced by Mainsail Capital for educational purposes.</p>
-        </div>
-
-        <div class="footer">
-            <p>© 2026 Mainsail Capital | Captain's Corner</p>
-            <p style="margin-top: 10px;">Access full watchlist: <a href="https://captainscorner.org" style="color: #C8A951;">captainscorner.org</a> | Code: <strong>mainsail26</strong></p>
+            <div class="popup-price">$29.99<span>/month</span></div>
+            <p class="popup-price-note">or $249.99 annually (save 30%) • Cancel anytime</p>
+            <p style="color: #d97706; font-size: 11px; margin: 10px 0; font-style: italic;">📧 After subscribing, check your spam/promotions folder for the welcome email with access code.</p>
+            <a href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" class="popup-cta">Subscribe Now</a>
+            <span class="popup-limited">Join 500+ investors getting the edge</span>
         </div>
     </div>
+    
+    <!-- STICKY FIRST CLASS BANNER -->
+    <div class="sticky-banner" id="stickyBanner">
+        <div class="sticky-content">
+            <span class="sticky-text">First Class Access <span>$29.99/month</span></span>
+            <a href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" class="sticky-btn">Subscribe Now</a>
+        </div>
+        <button class="sticky-close" onclick="closeSticky()">&times;</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const popup = document.getElementById('firstClassPopup');
+            const sticky = document.getElementById('stickyBanner');
+            
+            // Popup disabled for PDF version
+            // setTimeout(function() {
+            //     popup.classList.add('active');
+            // }, 1500);
+        });
+        
+        function closePopup() {
+            const popup = document.getElementById('firstClassPopup');
+            const sticky = document.getElementById('stickyBanner');
+            
+            popup.classList.remove('active');
+            
+            // Show sticky banner after closing popup
+            setTimeout(function() {
+                sticky.classList.add('visible');
+            }, 500);
+        }
+        
+        function closeSticky() {
+            const sticky = document.getElementById('stickyBanner');
+            sticky.classList.remove('visible');
+        }
+        
+        // Drawer Toggle
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer');
+            const overlay = document.getElementById('drawerOverlay');
+            const hamburger = document.getElementById('hamburgerBtn');
+            
+            drawer.classList.toggle('active');
+            overlay.classList.toggle('active');
+            hamburger.classList.toggle('active');
+            
+            // Prevent body scroll when drawer is open
+            if (drawer.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Smooth Scroll to Section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const headerOffset = 70; // Account for sticky header
+                const elementPosition = section.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        // Section Navigation
+        function showSection(sectionName, btn) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.add('active');
+            if (btn) btn.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Close drawer on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const drawer = document.getElementById('drawer');
+                if (drawer.classList.contains('active')) {
+                    toggleDrawer();
+                }
+            }
+        });
+    </script>
+    
+    <!-- STICKY HEADER -->
+    <header class="sticky-header">
+        <div class="sticky-logo">Captain's Corner</div>
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleDrawer()">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </header>
+    
+    <!-- DRAWER OVERLAY -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+    
+    <!-- DRAWER MENU -->
+    <nav class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-title">Navigate</div>
+            <div class="drawer-subtitle">Jump to any section</div>
+        </div>
+        
+        <div class="drawer-nav">
+            <a class="drawer-link" onclick="scrollToSection('horizon-scan'); toggleDrawer();">
+                <span class="drawer-link-number">01</span>
+                <span class="drawer-link-text">The Horizon Scan</span>
+            </a>
+            <a class="drawer-link" onclick="scrollToSection('deep-water'); toggleDrawer();">
+                <span class="drawer-link-number">02</span>
+                <span class="drawer-link-text">Deep Water Analysis</span>
+            </a>
+            <a class="drawer-link" onclick="scrollToSection('the-ledger'); toggleDrawer();">
+                <span class="drawer-link-number">03</span>
+                <span class="drawer-link-text">The Ledger</span>
+            </a>
+            <a class="drawer-link" onclick="scrollToSection('what-if'); toggleDrawer();">
+                <span class="drawer-link-number">—</span>
+                <span class="drawer-link-text">What If Scenarios</span>
+            </a>
+            <a class="drawer-link" onclick="scrollToSection('watchlist'); toggleDrawer();">
+                <span class="drawer-link-number">—</span>
+                <span class="drawer-link-text">Stocks We're Watching</span>
+            </a>
+            <a class="drawer-link" onclick="scrollToSection('heatmap'); toggleDrawer();">
+                <span class="drawer-link-number">04</span>
+                <span class="drawer-link-text">Global Sentiment Heatmap</span>
+            </a>
+            <a class="drawer-link" onclick="scrollToSection('quarterdeck'); toggleDrawer();">
+                <span class="drawer-link-number">05</span>
+                <span class="drawer-link-text">The Quarterdeck</span>
+            </a>
+            
+            <div class="drawer-section-title">Premium Access</div>
+            <a class="drawer-link" onclick="showSection('firstclass', document.querySelector('.nav-tab.premium')); toggleDrawer();">
+                <span class="drawer-link-text">🔒 First Class Portal</span>
+            </a>
+            
+            <a href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" class="drawer-cta" target="_blank">Upgrade to First Class</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header" style="padding-top: 50px;">
+            <!-- Mainsail Logo - White with Gold Accent -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <svg width="340" height="90" viewBox="0 0 340 90" style="margin: 0 auto; display: block; max-width: 100%;">
+                    <defs>
+                        <linearGradient id="newsletterGold" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#C8A951"/>
+                            <stop offset="50%" style="stop-color:#E8D595"/>
+                            <stop offset="100%" style="stop-color:#C8A951"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Sailboat -->
+                    <g transform="translate(170, 32)">
+                        <!-- Main sail - white -->
+                        <path d="M0 -22 L0 18 L-32 18 Q0 0 0 -22" fill="#ffffff"/>
+                        <!-- Front sail - white with opacity -->
+                        <path d="M3 -12 L3 18 L22 18 Q3 5 3 -12" fill="#ffffff" opacity="0.7"/>
+                        <!-- Hull/Wave - gold gradient -->
+                        <path d="M-38 20 Q0 28 38 20 L36 24 Q0 30 -36 24 Z" fill="url(#newsletterGold)"/>
+                    </g>
+                    <!-- Text - white -->
+                    <text x="170" y="75" font-family="'Cormorant Garamond', Georgia, serif" font-size="15" font-weight="400" 
+                          fill="#ffffff" text-anchor="middle" letter-spacing="2">MAINSAIL CAPITAL MANAGEMENT</text>
+                </svg>
+                <!-- Gold accent line -->
+                <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, #C8A951, transparent); margin: 15px auto;"></div>
+            </div>
+            
+            <h1 class="newsletter-title">Captain's Corner</h1>
+            <p class="newsletter-subtitle">Intelligence for the Discerning Navigator</p>
+            
+            <div style="margin-top: 25px; padding: 15px 30px; border: 1px solid var(--gold-rich); background: rgba(200, 169, 81, 0.1);">
+                <p style="font-family: var(--font-display); font-size: 16px; color: var(--gold-bright); letter-spacing: 2px; margin: 0; text-transform: uppercase;"><span style="font-size: 20px;">10%</span> of all proceeds will be donated to the No Kid Hungry Foundation</p>
+            </div>
+            
+            <div class="date-badge">
+                <p class="date-range">Week of April 27 — May 1, 2026</p>
+            </div>
+        </header>
+        
+        <!-- NAVIGATION -->
+        <nav class="nav-bar">
+            <button class="nav-tab active" onclick="showSection('newsletter', this)">Newsletter</button>
+            <button class="nav-tab premium" onclick="showSection('firstclass', this)">First Class Portal</button>
+        </nav>
+        
+        <!-- NEWSLETTER SECTION -->
+        <div id="newsletter-section" class="content-section active">
+        <main class="content">
+            
+            <!-- SECTION 1: THE HORIZON SCAN -->
+            <section class="section" id="horizon-scan">
+                <div class="section-header">
+                    <span class="section-number">01</span>
+                    <div>
+                        <h2 class="section-title">The Horizon Scan</h2>
+                        <p class="section-subtitle">Macro Intelligence & Institutional Flow</p>
+                    </div>
+                </div>
+                
+                <p class="horizon-text">
+                    <strong>What's happening:</strong> The tech leg of earnings season did its job — and the Nasdaq took the baton. The S&P 500 added another 0.6% on the week to close Friday at 7,165.08, a fresh record. The Nasdaq Composite did the heavy lifting at +1.5% to 24,836.60, also at all-time highs as the semiconductor index extended gains for an 18th consecutive day. The Dow lagged at -0.4% to 49,230.71, weighed down by oil sensitivity and softer industrials. The week's defining catalyst was Intel's Thursday-evening blowout: $13.6B revenue versus $12.42B expected, adjusted EPS of $0.29 versus $0.01 expected, and Data Center & AI revenue of $5.1B (+22% year-over-year). Shares jumped 20% in after-hours and finished Friday at a record high — surpassing levels not seen since 2000. Tesla reported Wednesday after the close: EPS of $0.41 versus $0.36 expected and revenue of $22.39B (+16% YoY), a slight beat on margins, but deliveries missed by roughly 7,600 vehicles and Musk committed $25B+ to AI capex this year — sending the stock sideways after-hours. Nvidia retook the $5 trillion market-cap mark on Friday.
+                </p>
+
+                <p class="horizon-text">
+                    <strong>What it means:</strong> Two crosscurrents defined the tape. On one side, AI capex and chip demand are still very real — Intel's Data Center business growing 22% YoY, the SOX index logging an 18-day streak, and a Q2 guide ($13.8–14.8B revenue) that crushed Street estimates ($13.03B). On the other side, the consumer signal turned uglier than the index would suggest. The University of Michigan's final April consumer sentiment landed at 49.8 — revised up from a 47.6 preliminary, but still the lowest reading on record. More importantly, year-ahead inflation expectations spiked to 4.7% from 3.8% — the largest one-month jump since April 2025 — and long-term expectations climbed to 3.5%, the highest since October 2025. The 10-Year Treasury yield finished Friday at 4.31%, essentially flat as the bond market split the difference between "AI capex is bullish growth" and "inflation expectations are unanchoring." Gold held above $4,700/oz, Bitcoin closed near $78,126, and the VIX drifted to 18.71 — calm at the index level, but with a clear hedge bid still on. Kevin Warsh's confirmation hearings began Tuesday — a market event that is under-priced given how much rate-path expectations depend on the Fed Chair transition.
+                </p>
+
+                <p class="horizon-text">
+                    <strong>Our view:</strong> This week is the test the rally was built for. The FOMC meets Tuesday-Wednesday — Jerome Powell's final scheduled press conference as Fed Chair — with markets pricing roughly 85% odds of a hold at 3.50–3.75%. Wednesday after the close brings Microsoft, Meta, and Amazon. Thursday after the close brings Apple. The Q1 GDP advance estimate, March PCE inflation print, and ISM Manufacturing PMI all land between Wednesday and Friday. That is a meeting, three Mag-7 prints, two of the most consequential macro releases of the quarter, and a sentiment-defining manufacturing read — all in five trading days. At 7,165 on the S&P, the index is priced for clean tech beats, a dovish-leaning Powell sign-off, in-line PCE, and an ISM that holds above 52. That is a stack of "right" outcomes. Base case: choppy week with sector rotation as the AI capex narrative gets stress-tested against actual hyperscaler revenue conversion. Upside trigger: Microsoft and Meta show AI monetization accelerating and Powell signals continuity into Warsh. Downside trigger: PCE prints hot or any of the Mag 4 disappoints on capex efficiency. We continue to trim into strength, hold the gold and quality-bond hedges, and keep dry powder for the rotation we expect.
+                </p>
+            </section>
+            
+            <!-- SECTION 2: DEEP WATER ANALYSIS -->
+            <section class="section" id="deep-water">
+                <div class="section-header">
+                    <span class="section-number">02</span>
+                    <div>
+                        <h2 class="section-title">Deep Water Analysis</h2>
+                        <p class="section-subtitle">The AI Capex Question: Are the Hyperscalers Earning Their $700B?</p>
+                    </div>
+                </div>
+                
+                <p class="horizon-text">
+                    <strong>Why this matters:</strong> The combined 2026 capex commitment from Microsoft, Meta, Amazon, and Alphabet is now tracking near $700 billion — Meta alone guided to $115–135B, Microsoft to $120B+, Alphabet to $115B+. Tesla added $25B to the AI infrastructure pile on Wednesday. That is the single largest concentrated capital deployment by Corporate America in modern history, and the question that will define the rest of 2026 is whether it produces commensurate revenue growth. Last week's tape gave us two early data points worth respecting. First, Intel's Q1 — Data Center & AI revenue of $5.1B (+22% YoY), Q2 guide of $13.8–14.8B versus $13.03B expected, the foundry business showing the first real signs of monetization. That is real demand. Second, Tesla's report — a slight beat on EPS and revenue, but with deliveries missing by 7,600 units and a $25B capex commitment that pushes 2026 free cash flow lower for a payoff (Optimus, Cybercab, robotaxi) Musk now says is "late July, August" at earliest. That is real spending against deferred returns. The hyperscalers reporting this Wednesday and Thursday — Microsoft FY26 Q3, Meta Q1, Amazon Q1, Apple FQ2 — are the deciding vote.
+                </p>
+
+                <p class="horizon-text">
+                    <strong>The bottom line:</strong> The market is no longer rewarding AI capex on faith alone. That is a healthy development and an important inflection point. Through 2024 and most of 2025, every announced capex bump was treated as bullish — proof of competitive positioning in a winner-take-all infrastructure race. That regime has ended. As CNBC and S&P Global both noted in their previews, investors now want to see the AI revenue line accelerating in absolute terms, not just inferred from total cloud growth. The crucial metric this week is segment-level: Azure AI services revenue, Meta's AI-driven ad uplift commentary, AWS bedrock-and-trainium attach rate, Apple's Services growth excluding Search payments. If those numbers come in strong, the rally extends and the AI trade broadens. If they come in soft, the rotation we have been positioned for becomes the trade of the next month. The University of Michigan sentiment data — 49.8 final, with year-ahead inflation expectations jumping to 4.7% — is the macro reminder that the consumer is not in the same place as the index. The S&P at 7,165 with consumer sentiment at a record low is a setup that historically resolves through earnings, not through sentiment recovery. Earnings begin Wednesday.
+                </p>
+
+                <div class="contrarian-box">
+                    <div class="contrarian-label">The Contrarian Compass</div>
+                    <p class="contrarian-text">
+                        "Look past the index level and watch what the bond market is telling you. The 10-Year Treasury at 4.31% is essentially flat on the week despite a Nasdaq at a fresh record and a semiconductor index in an 18-day winning streak. Normally, that combination — risk assets ripping, growth narrative confirmed — would push yields higher as rate-cut expectations get pulled forward. They did not. The reason is on page two of the Michigan sentiment release: year-ahead inflation expectations jumped to 4.7% from 3.8%, the largest one-month jump since April 2025. Long-term expectations climbed to 3.5%, the highest since October 2025. That is a household sector telling the Fed it has lost confidence in the inflation glide path — and the bond market is taking it seriously. So here is the contrarian read for this week: the consensus is positioned for a dovish Powell sign-off, clean Mag-7 beats, and a benign March PCE. The setup is asymmetric in the other direction. Powell has every incentive to leave Warsh a clean hand-off, which means under-promising on cuts. PCE on Thursday is the data point the Fed actually targets, and a 0.3% monthly print would unwind a lot of priced cuts in a hurry. With VIX at 18.71, hedges are still cheap. Buy them before earnings, not after."
+                    </p>
+                </div>
+
+                <!-- MACRO LENS: WHAT THIS MEANS FOR YOU -->
+                <div class="macro-lens">
+                    <div class="macro-header">
+                        <span class="macro-icon">🎯</span>
+                        <div>
+                            <h3 class="macro-title">What This Means for Your Portfolio</h3>
+                            <div class="macro-subtitle">AI Capex Reality Check Week: Position Before the Print, Not After</div>
+                        </div>
+                    </div>
+                    <div class="macro-content">
+                        <p><strong>The simple version:</strong> Tech took the baton from financials and ran with it. The S&P 500 added 0.6% to a fresh record 7,165.08, the Nasdaq tacked on 1.5% to 24,836.60, and the semiconductor index extended its winning streak to 18 straight days. The Dow lagged at -0.4% to 49,230.71 as oil-sensitive industrials gave back. Intel's Thursday-evening earnings were the week's defining moment — $13.6B revenue versus $12.42B expected, EPS $0.29 versus $0.01 expected, Data Center & AI +22% YoY — and the stock jumped 20% after-hours to a record high not seen since the year 2000. Tesla's Wednesday-evening print was a milder beat with weaker delivery numbers and a $25B AI capex commitment. The University of Michigan final April consumer sentiment came in at 49.8 — still a record low, with year-ahead inflation expectations spiking to 4.7%.</p>
+
+                        <p><strong>What last week's data told us:</strong></p>
+
+                        <div class="macro-highlight">
+                            <div class="macro-highlight-title">Key Takeaways from the Week of April 20 – 24</div>
+                            <p class="macro-highlight-text">• S&P 500: 7,165.08 — fresh all-time high, +0.6% on the week<br>• Nasdaq: 24,836.60 — fresh all-time high, +1.5% on the week<br>• Dow Jones: 49,230.71 — -0.4% on the week, lagged on oil sensitivity<br>• Semiconductor index: 18 consecutive daily gains<br>• VIX: 18.71 — calm, with hedge bid still on<br>• 10-Year Treasury yield: 4.31% — flat as bond market split AI growth versus inflation expectations<br>• Gold: above $4,700/oz — institutional hedges still in book<br>• Bitcoin: ~$78,126 — risk appetite intact<br>• Intel Q1: $13.6B revenue vs $12.42B est; EPS $0.29 vs $0.01 est; Data Center & AI +22% YoY; Q2 guide $13.8–14.8B vs $13.03B est; stock +20% after-hours, hit record<br>• Tesla Q1: EPS $0.41 vs $0.36 est; revenue $22.39B (+16% YoY); deliveries missed by ~7,600 units; $25B+ AI capex commitment<br>• Nvidia retook $5T market-cap mark on Friday<br>• Univ. Michigan April final sentiment: 49.8 (revised from 47.6 prelim) — record low<br>• Year-ahead inflation expectations jumped to 4.7% from 3.8% (largest one-month jump since April 2025)<br>• Long-term inflation expectations: 3.5%, highest since October 2025<br>• Kevin Warsh Fed Chair confirmation hearings began Tuesday</p>
+                        </div>
+
+                        <p><strong>How to think about your portfolio:</strong> This is a position-before-the-print week, not a chase-the-tape week. Five trading days carry the FOMC (Tue–Wed), Microsoft, Meta, Amazon (Wed AMC), Apple (Thu AMC), Q1 GDP advance, March PCE, and ISM Manufacturing — any one of which can move the index 1–2% on its own, and which collectively define whether the AI-capex narrative survives April with conviction. The honest read on the setup: implied volatility at 18.71 is cheap relative to the catalyst calendar, and consumer sentiment at a record low while the index sits at a record high is a tension that earnings have to resolve. Practical steps for this week: confirm your position sizing in mega-cap tech is not stretched relative to the rest of your portfolio, hold gold and quality bonds as the inflation-expectations hedge, do not initiate new mega-cap positions on Wednesday morning before the prints — wait for the after-hours dust to settle. If the Mag 4 confirms accelerating AI revenue, the rally broadens and you have your add-the-rotation opportunity. If even one disappoints on capex efficiency, the pullback comes to your hedges, not the other way around. The barbell remains: selectively long quality earnings beats, hedges fully on, dry powder ready. Let the market come to you.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 3: THE LEDGER -->
+            <section class="section" id="the-ledger">
+                <div class="section-header">
+                    <span class="section-number">03</span>
+                    <div>
+                        <h2 class="section-title">The Ledger</h2>
+                        <p class="section-subtitle">Where Markets Stand & Where They Might Go</p>
+                    </div>
+                </div>
+                
+                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                <table class="data-table" style="min-width: 500px;">
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Current</th>
+                            <th>Weekly Δ</th>
+                            <th>30-Day Outlook</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="https://finance.yahoo.com/quote/%5EGSPC" target="_blank" class="asset-link"><span class="asset-name">S&P 500</span></a></td>
+                            <td>7,165.08</td>
+                            <td class="delta-positive">+0.60%</td>
+                            <td><span class="outlook outlook-bullish">Record Highs</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://finance.yahoo.com/quote/%5EIXIC" target="_blank" class="asset-link"><span class="asset-name">Nasdaq</span></a></td>
+                            <td>24,836.60</td>
+                            <td class="delta-positive">+1.50%</td>
+                            <td><span class="outlook outlook-bullish">Tech Leadership</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://finance.yahoo.com/quote/%5EDJI" target="_blank" class="asset-link"><span class="asset-name">Dow Jones</span></a></td>
+                            <td>49,230.71</td>
+                            <td class="delta-negative">-0.40%</td>
+                            <td><span class="outlook outlook-neutral">Lagging</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://finance.yahoo.com/quote/%5EVIX" target="_blank" class="asset-link"><span class="asset-name">VIX</span></a></td>
+                            <td>18.71</td>
+                            <td class="delta-positive">+4.29%</td>
+                            <td><span class="outlook outlook-neutral">Hedge Bid On</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://finance.yahoo.com/quote/%5ETNX" target="_blank" class="asset-link"><span class="asset-name">10-Year Treasury</span></a></td>
+                            <td>4.31%</td>
+                            <td class="delta-neutral">Flat</td>
+                            <td><span class="outlook outlook-neutral">Pre-FOMC</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://finance.yahoo.com/quote/GC%3DF" target="_blank" class="asset-link"><span class="asset-name">Gold</span></a></td>
+                            <td>$4,720/oz</td>
+                            <td class="delta-negative">-3.03%</td>
+                            <td><span class="outlook outlook-bullish">Hedges Held</span></td>
+                        </tr>
+                        <tr>
+                            <td><a href="https://finance.yahoo.com/quote/BTC-USD" target="_blank" class="asset-link"><span class="asset-name">Bitcoin</span></a></td>
+                            <td>$78,126</td>
+                            <td class="delta-positive">+3.14%</td>
+                            <td><span class="outlook outlook-bullish">Risk-On</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+                <!-- FEAR/GREED BAROMETER -->
+                <div class="barometer-container" id="barometer">
+                    <h3 class="barometer-title">The Captain's Barometer</h3>
+                    <p class="barometer-subtitle">Market Sentiment Index</p>
+
+                    <div class="barometer-gauge">
+                        <div class="barometer-marker" id="barometerMarker" style="left: 65%;"></div>
+                    </div>
+
+                    <div class="barometer-labels">
+                        <span>Extreme Fear</span>
+                        <span>Fear</span>
+                        <span>Neutral</span>
+                        <span>Greed</span>
+                        <span>Extreme Greed</span>
+                    </div>
+
+                    <div class="barometer-reading">
+                        <div class="barometer-value" id="barometerValue">65</div>
+                        <div class="barometer-status fear" id="barometerStatus">Greed</div>
+                    </div>
+
+                    <div class="barometer-change" id="barometerChange">Last Week: 68 (Greed) → Down 3 points to 65 (still Greed) as Intel's blowout pushed Nasdaq to fresh records but consumer sentiment hit a record low and inflation expectations spiked to 4.7%</div>
+
+                    <div class="barometer-take" id="barometerTake">
+                        <strong>The Captain's Take:</strong> "Greed at 65 is the right reading for a market sitting at all-time highs into the most consequential earnings-and-Fed week of the quarter. Intel's beat was real — Q2 guidance crushed estimates, the foundry is monetizing, and the SOX index is in an 18-day winning streak. Tesla's print was middling but the $25B AI capex commitment confirms the spending wave is still accelerating. The barometer would be higher except for one thing: the bond market is not confirming. The 10-Year held at 4.31% on a week when the index hit fresh records — meaning bonds are not buying the dovish-Powell narrative the equity market is pricing. The Michigan sentiment data — final April at 49.8, year-ahead inflation expectations spiking to 4.7% — is why. The consumer is telling the Fed inflation expectations are unanchoring, and Powell will see that data heading into Wednesday's press conference. Greed at 65 is not a sell signal, but it is the reading where the asymmetry favors hedges. With FOMC Wed, three Mag-7 prints Wednesday-Thursday, and PCE Thursday — VIX at 18.71 is cheap insurance for the most catalyst-dense week of the quarter."
+                    </div>
+                </div>
+                
+                <div class="locked-pick">
+                    <div class="locked-label">Restricted Entry</div>
+                    <h3 class="locked-title">High-Conviction Pick of the Month</h3>
+                    <p class="locked-text">
+                        <strong>Thesis:</strong> A leading provider of data center infrastructure positioned to capture the $1.8 trillion AI buildout. The company has secured 15-year power purchase agreements with hyperscalers, locking in 18% IRR visibility. Trading at 12x EBITDA vs. 22x for comparable peers. Entry before Q1 earnings on March 5th.<br><br>
+                        <strong>Ticker:</strong> [LOCKED: FIRST CLASS ACCESS ONLY]<br>
+                        <strong>Entry Price:</strong> [LOCKED: FIRST CLASS ACCESS ONLY]<br>
+                        <strong>Target:</strong> [LOCKED: FIRST CLASS ACCESS ONLY]
+                    </p>
+                    <a href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" class="locked-cta">Unlock Now →</a>
+                </div>
+                
+                <!-- WHAT IF SCENARIOS -->
+                <div class="whatif-section" id="what-if">
+                    <h3 class="whatif-title">Three Ways This Week Could Play Out</h3>
+                    <p style="font-size: 14px; color: var(--slate); margin-bottom: 20px; line-height: 1.6;">
+                        The week of April 27 – May 1 is the most catalyst-dense five trading days of the quarter. Tuesday-Wednesday: Jerome Powell's final scheduled FOMC meeting and press conference — markets price ~85% odds of a hold at 3.50–3.75%, no SEP refresh, all the signal will come from the statement language and Powell's tone. Wednesday after the close delivers a triple feature: Microsoft FY26 Q3, Meta Q1, and Amazon Q1. Thursday after the close: Apple FQ2. Macro stack: Q1 GDP advance estimate (Wednesday), March PCE inflation data (Thursday — the data point the Fed targets), ISM Manufacturing PMI (Friday). The single most consequential moment is Wednesday's PCE-FOMC-Microsoft-Meta-Amazon stack — markets often consolidate the entire week's narrative in those 8 hours.
+                    </p>
+                    <div class="whatif-grid">
+                        <div class="whatif-card">
+                            <div class="whatif-scenario">Scenario A: Mag 4 Beat, Powell Dovish, PCE Cool</div>
+                            <div class="whatif-question">"Microsoft, Meta, Amazon, and Apple all confirm AI revenue is accelerating against the capex line, Powell signals continuity (and a path to a summer cut), and March core PCE prints 0.2% MoM or below."</div>
+                            <div class="whatif-impact">
+                                <strong>Likely market reaction:</strong><br>
+                                • S&P 500 breaks above 7,200, momentum carries to 7,300<br>
+                                • Nasdaq prints another record, AI-related leadership broadens<br>
+                                • VIX compresses to 15–16; 10-Year drops 10–15 bps<br>
+                                <br>
+                                <strong>Our take:</strong> This is the bull case the index is priced for, and it requires a near-perfect run. The marginal probability of every catalyst cooperating is mathematically lower than consensus assumes, but if it does play out, the rally broadens beyond mega-cap tech into financials, industrials, and small caps. We would not chase here — we would let the breakout confirm and use the inevitable Friday consolidation to add quality earnings beats at slightly better levels.
+                            </div>
+                        </div>
+                        <div class="whatif-card">
+                            <div class="whatif-scenario">Scenario B: Mixed Earnings, Powell Cautious, In-Line PCE</div>
+                            <div class="whatif-question">"Microsoft and Meta confirm AI monetization, but Amazon or Apple disappoints on guidance. Powell holds, signals data dependence, and refuses to telegraph a summer cut. PCE prints in line at 0.25% MoM."</div>
+                            <div class="whatif-impact">
+                                <strong>Likely market reaction:</strong><br>
+                                • S&P rotates between 7,050 and 7,200 with no decisive direction<br>
+                                • Mega-cap leadership narrows; sector dispersion widens<br>
+                                • VIX holds 18–20; 10-Year stays 4.25–4.35%<br>
+                                <br>
+                                <strong>Our take:</strong> This is our base case. Earnings dispersion within the Mag 7, a Powell who deliberately under-delivers to leave Warsh a clean hand-off, and a PCE that does not change the rate-path conversation. The S&P consolidates near record highs while sector rotation accelerates — that is healthy and is the regime we have been positioned for. We add to quality earnings beats on weakness, hold hedges, and let the dispersion play work.
+                            </div>
+                        </div>
+                        <div class="whatif-card">
+                            <div class="whatif-scenario">Scenario C: AI Capex Disappointment or Hot PCE</div>
+                            <div class="whatif-question">"One or more hyperscalers disappoint on AI revenue versus capex, OR March PCE prints 0.3%+ MoM, OR Powell signals a higher-for-longer regime more explicitly than the market expects."</div>
+                            <div class="whatif-impact">
+                                <strong>Likely market reaction:</strong><br>
+                                • S&P pulls back to 6,950–7,000; first 2%+ weekly drop in a month<br>
+                                • Nasdaq breaks the SOX winning streak; mega-cap growth rotates out<br>
+                                • VIX pops to 22–25; 10-Year leaks toward 4.45–4.50%<br>
+                                <br>
+                                <strong>Our take:</strong> This is the asymmetric tail risk no one is positioned for. Michigan's inflation expectations jumping to 4.7% should not be ignored — the Fed's mandate is anchored expectations, and an unanchoring household forecast is a legitimate hawkish trigger. PCE on Thursday is the most important data point of the week. Hot prints + Powell holding the line + any single Mag 4 missing = the first real pullback in a month. We have been trimming into strength specifically for this scenario; gold and quality-bond hedges remain in book.
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size: 12px; color: var(--stone); margin-top: 20px; font-style: italic;">
+                        Base case: Scenario B — Powell holds and under-delivers, mega-cap earnings come in mixed with dispersion, PCE in line. Wednesday afternoon-to-evening is the single most consequential 8-hour window of Q2: Powell at 2:30pm, Microsoft/Meta/Amazon AMC, GDP earlier in the day. The honest read is that the market is priced for nearly everything to go right. The asymmetry favors hedges, and at VIX 18.71 they are still cheap relative to the calendar.
+                    </p>
+                </div>
+                
+                <!-- CAPTAIN'S WATCHLIST -->
+                <div class="watchlist-section" id="watchlist">
+                    <div class="watchlist-header">
+                        <h3 class="watchlist-title">Stocks We're Watching</h3>
+                        <span class="watchlist-badge">Not Recommendations</span>
+                    </div>
+                    <p style="font-size: 14px; color: var(--slate); margin-bottom: 25px; line-height: 1.6;">
+                        Three names capturing our attention heading into the week of April 27 – May 1, the most catalyst-dense week of Q2 with FOMC Wednesday and four Mag-7 prints. Microsoft is the single most important earnings catalyst of the week — its Azure AI revenue line will set the tone for whether the entire $700B hyperscaler capex narrative is converting. Intel earned its watchlist slot the hard way: a Q1 blowout that pushed shares to the highest level since 2000. And gold, which finally took a step back as risk appetite returned but remains the cleanest hedge against the unanchoring inflation expectations the Michigan data flagged.
+                    </p>
+                    <div class="watchlist-grid">
+                        <div class="watchlist-item">
+                            <span class="watchlist-rank">#1</span>
+                            <div class="watchlist-ticker"><a href="https://finance.yahoo.com/quote/MSFT" target="_blank">MSFT</a></div>
+                            <div class="watchlist-name">Microsoft Corporation</div>
+                            <span class="watchlist-signal whale">⚡ FY26 Q3 Catalyst Wednesday After Close</span>
+                            <p class="watchlist-note">
+                                Microsoft reports FY26 Q3 Wednesday April 29 after the close, and the single most-watched line will be Azure AI services revenue. The company has been spending at the top of the hyperscaler stack — capex tracking toward $120B+ in fiscal 2026, with $37.5B already deployed in the most recent quarter alone — and the question that will define the rest of the year is whether that spend is converting to enterprise AI revenue at the rate management has implied. A clean Azure beat (consensus is for AI services up 30%+ YoY) extends the AI-capex narrative across the entire mega-cap complex. A miss or guidance walkdown triggers the first real "is the AI capex earning its keep" rotation. Microsoft's print sits between Powell's 2:30pm press conference and Meta/Amazon's reports — the convergence of those four catalysts in one afternoon is the most consequential 8-hour window of Q2. Not a recommendation, just the week's defining print.
+                            </p>
+                        </div>
+                        <div class="watchlist-item">
+                            <span class="watchlist-rank">#2</span>
+                            <div class="watchlist-ticker"><a href="https://finance.yahoo.com/quote/INTC" target="_blank">INTC</a></div>
+                            <div class="watchlist-name">Intel Corporation</div>
+                            <span class="watchlist-signal volume" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3);">💎 Q1 Blowout — Highest Since 2000</span>
+                            <p class="watchlist-note">
+                                Intel reported Q1 last Thursday: $13.6B revenue versus $12.42B expected, adjusted EPS of $0.29 versus $0.01 expected, and Data Center & AI revenue of $5.1B (+22% YoY). Q2 guidance crushed estimates: $13.8–14.8B revenue versus $13.03B expected, EPS guide of $0.20 versus $0.09 expected. Shares jumped 20% after-hours and finished Friday at the highest level since the year 2000. The story is no longer about whether Intel can compete — the foundry is monetizing, the data center business is growing, and the Q2 guide implies the trajectory accelerates. The risk now is positioning: Intel has been the single best-performing Dow component in April, the chase is on, and the SOX index has been up 18 consecutive sessions. We are not chasing here, but we respect the print and watch how the stock behaves on the first 2%+ weekly down move — that will tell us whether the run is fundamental or technical.
+                            </p>
+                        </div>
+                        <div class="watchlist-item">
+                            <span class="watchlist-rank">#3</span>
+                            <div class="watchlist-ticker"><a href="https://finance.yahoo.com/quote/GLD" target="_blank">GLD</a></div>
+                            <div class="watchlist-name">SPDR Gold Shares ETF</div>
+                            <span class="watchlist-signal institutional">🥇 Inflation-Expectation Hedge</span>
+                            <p class="watchlist-note">
+                                Gold finished the week above $4,700/oz — a roughly 3% pullback from the prior week's high above $4,867 as risk appetite returned, but still firmly in the bull regime. The University of Michigan data is the reason this stays on the watchlist: year-ahead inflation expectations spiked to 4.7% from 3.8%, and long-term expectations climbed to 3.5%, the highest since October 2025. That is the household sector telling the Fed it has lost confidence in the inflation glide path, and it is precisely the macro setup that historically pays gold. The Fed's mandate is anchored expectations — and Powell will see this data heading into Wednesday's press conference. If he signals he sees the unanchoring as transitory and pushes ahead with cuts, gold rallies on inflation-protection demand. If he holds firm and signals data-dependent caution, gold rallies on flight-to-quality demand. The asymmetry is in the holder's favor regardless of his tone. Hedges stay on.
+                            </p>
+                        </div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, rgba(10, 22, 40, 0.03) 0%, rgba(200, 169, 81, 0.05) 100%); border-left: 3px solid var(--gold-rich); padding: 20px; margin-top: 25px;">
+                        <p style="font-size: 13px; color: var(--slate); line-height: 1.6; margin: 0;">
+                            <strong>Important Disclosures:</strong> The securities mentioned above are for educational and informational purposes only and do not constitute a recommendation to buy, sell, or hold any security. Past performance is not indicative of future results. All investments carry risk, including possible loss of principal. Information sourced from regulatory filings (SEC 13F), market data, and public company disclosures. Please consult with a qualified financial advisor before making any investment decisions.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 4: GLOBAL SENTIMENT HEATMAP -->
+            <section class="section">
+                <div class="section-header">
+                    <span class="section-number">04</span>
+                    <div>
+                        <h2 class="section-title">Global Sentiment Heatmap</h2>
+                        <p class="section-subtitle">Market Temperature at a Glance</p>
+                    </div>
+                </div>
+                
+                <div class="heatmap-section" id="heatmap">
+                    <div class="heatmap-header">
+                        <span class="heatmap-icon">🌡️</span>
+                        <div>
+                            <h3 class="heatmap-title">Where the Money is Flowing</h3>
+                            <div class="heatmap-subtitle">Records Printed: Tech & Financials Lead, Energy Cools, Hedges Hold</div>
+                        </div>
+                    </div>
+                    
+                    <div class="heatmap-grid">
+                        <div class="heatmap-item heatmap-hot">
+                            <div class="heatmap-sector">Financials</div>
+                            <div class="heatmap-status">🔥 Heating</div>
+                        </div>
+                        <div class="heatmap-item heatmap-hot">
+                            <div class="heatmap-sector">Healthcare</div>
+                            <div class="heatmap-status">🔥 Heating</div>
+                        </div>
+                        <div class="heatmap-item heatmap-hot">
+                            <div class="heatmap-sector">Tech</div>
+                            <div class="heatmap-status">🔥 Heating</div>
+                        </div>
+                        <div class="heatmap-item heatmap-warming">
+                            <div class="heatmap-sector">Consumer Disc.</div>
+                            <div class="heatmap-status">⚡ Warming</div>
+                        </div>
+                        <div class="heatmap-item heatmap-warming">
+                            <div class="heatmap-sector">Defense</div>
+                            <div class="heatmap-status">⚡ Warming</div>
+                        </div>
+                        <div class="heatmap-item heatmap-neutral">
+                            <div class="heatmap-sector">Energy</div>
+                            <div class="heatmap-status">➡️ Neutral</div>
+                        </div>
+                        <div class="heatmap-item heatmap-neutral">
+                            <div class="heatmap-sector">Materials</div>
+                            <div class="heatmap-status">➡️ Neutral</div>
+                        </div>
+                        <div class="heatmap-item heatmap-warming">
+                            <div class="heatmap-sector">Comm. Services</div>
+                            <div class="heatmap-status">⚡ Warming</div>
+                        </div>
+                        <div class="heatmap-item heatmap-cooling">
+                            <div class="heatmap-sector">Real Estate</div>
+                            <div class="heatmap-status">❄️ Cooling</div>
+                        </div>
+                        <div class="heatmap-item heatmap-warming">
+                            <div class="heatmap-sector">Utilities</div>
+                            <div class="heatmap-status">⚡ Warming</div>
+                        </div>
+                        <div class="heatmap-item heatmap-warming">
+                            <div class="heatmap-sector">Consumer Staples</div>
+                            <div class="heatmap-status">⚡ Warming</div>
+                        </div>
+                        <div class="heatmap-item heatmap-neutral">
+                            <div class="heatmap-sector">Cybersecurity</div>
+                            <div class="heatmap-status">➡️ Neutral</div>
+                        </div>
+                    </div>
+                    
+                    <div class="heatmap-legend" style="flex-wrap: wrap;">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #10b981;"></div>
+                            <span>Heating (Inflow)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #34d399;"></div>
+                            <span>Warming (Accumulation)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #64748b;"></div>
+                            <span>Neutral</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #f87171;"></div>
+                            <span>Cooling (Distribution)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background: #dc2626;"></div>
+                            <span>Cold (Outflow)</span>
+                        </div>
+                    </div>
+                    
+                    <p style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 20px; text-align: center; font-style: italic;">
+                        Based on 13F filings, ETF flow data, and dark pool activity over trailing 7 days. Updated weekly.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- SECTION 5: INTELLIGENCE LINKS -->
+            <section class="section" id="intelligence">
+                <div class="section-header">
+                    <span class="section-number">05</span>
+                    <div>
+                        <h2 class="section-title">Intelligence Links</h2>
+                        <p class="section-subtitle">Required Reading from Trusted Sources</p>
+                    </div>
+                </div>
+                
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 18px 0; border-bottom: 1px solid rgba(10, 22, 40, 0.1); display: flex; align-items: center; gap: 15px;">
+                        <a href="https://finance.yahoo.com/markets/stocks/live/stock-market-today-friday-april-24-224547261.html" target="_blank" style="text-decoration: none; color: var(--navy-rich); font-size: 15px; line-height: 1.5; flex: 1;">
+                            <span style="color: var(--gold-rich); margin-right: 10px;">→</span>
+                            Yahoo Finance — S&P 500 and Nasdaq Close at Record Highs as Nvidia Retakes $5 Trillion Mark, Intel Tops 2000 Peak
+                        </a>
+                        <span style="font-size: 11px; color: var(--stone); text-transform: uppercase; letter-spacing: 1px;">Yahoo Finance</span>
+                    </li>
+
+                    <li style="padding: 18px 0; border-bottom: 1px solid rgba(10, 22, 40, 0.1); display: flex; align-items: center; gap: 15px;">
+                        <a href="https://www.cnbc.com/2026/04/23/intel-intc-q1-2026-earnings-report.html" target="_blank" style="text-decoration: none; color: var(--navy-rich); font-size: 15px; line-height: 1.5; flex: 1;">
+                            <span style="color: var(--gold-rich); margin-right: 10px;">→</span>
+                            CNBC — Intel Q1 2026: Revenue Beats by $1.2B, Q2 Guide Crushes Estimates, Stock Jumps 20% After-Hours
+                        </a>
+                        <span style="font-size: 11px; color: var(--stone); text-transform: uppercase; letter-spacing: 1px;">CNBC</span>
+                    </li>
+
+                    <li style="padding: 18px 0; border-bottom: 1px solid rgba(10, 22, 40, 0.1); display: flex; align-items: center; gap: 15px;">
+                        <a href="https://www.cnbc.com/2026/04/22/tesla-tsla-q1-2026-earnings-report.html" target="_blank" style="text-decoration: none; color: var(--navy-rich); font-size: 15px; line-height: 1.5; flex: 1;">
+                            <span style="color: var(--gold-rich); margin-right: 10px;">→</span>
+                            CNBC — Tesla Q1 2026: EPS Beat at $0.41, Deliveries Miss by 7,600 Units, Musk Commits $25B+ to AI Capex
+                        </a>
+                        <span style="font-size: 11px; color: var(--stone); text-transform: uppercase; letter-spacing: 1px;">CNBC</span>
+                    </li>
+
+                    <li style="padding: 18px 0; border-bottom: 1px solid rgba(10, 22, 40, 0.1); display: flex; align-items: center; gap: 15px;">
+                        <a href="https://www.benzinga.com/markets/economic-data/26/04/51757212/inflation-expectations-michigan-consumer-sentiment-april-2026" target="_blank" style="text-decoration: none; color: var(--navy-rich); font-size: 15px; line-height: 1.5; flex: 1;">
+                            <span style="color: var(--gold-rich); margin-right: 10px;">→</span>
+                            Benzinga — Michigan Sentiment Hits Record Low of 49.8; Year-Ahead Inflation Expectations Spike to 4.7%
+                        </a>
+                        <span style="font-size: 11px; color: var(--stone); text-transform: uppercase; letter-spacing: 1px;">Benzinga</span>
+                    </li>
+
+                    <li style="padding: 18px 0; border-bottom: 1px solid rgba(10, 22, 40, 0.1); display: flex; align-items: center; gap: 15px;">
+                        <a href="https://invezz.com/news/2026/04/25/meta-microsoft-earnings-due-next-week-heres-what-top-analysts-say/" target="_blank" style="text-decoration: none; color: var(--navy-rich); font-size: 15px; line-height: 1.5; flex: 1;">
+                            <span style="color: var(--gold-rich); margin-right: 10px;">→</span>
+                            Invezz — Meta and Microsoft Earnings Preview: AI Revenue vs. $250B+ Combined 2026 Capex
+                        </a>
+                        <span style="font-size: 11px; color: var(--stone); text-transform: uppercase; letter-spacing: 1px;">Invezz</span>
+                    </li>
+
+                    <li style="padding: 18px 0; display: flex; align-items: center; gap: 15px;">
+                        <a href="https://blog.kraken.com/economic-brief/april-22-2026" target="_blank" style="text-decoration: none; color: var(--navy-rich); font-size: 15px; line-height: 1.5; flex: 1;">
+                            <span style="color: var(--gold-rich); margin-right: 10px;">→</span>
+                            Kraken — Week Ahead (April 27 – May 1): FOMC, GDP, PCE, ISM Manufacturing, Big Tech Earnings
+                        </a>
+                        <span style="font-size: 11px; color: var(--stone); text-transform: uppercase; letter-spacing: 1px;">Kraken</span>
+                    </li>
+                </ul>
+            </section>
+            
+            <!-- SECTION 6: THE QUARTERDECK (PREMIUM) -->
+            <section class="section" id="quarterdeck">
+                <div class="section-header">
+                    <span class="section-number">06</span>
+                    <div>
+                        <h2 class="section-title">The Quarterdeck</h2>
+                        <p class="section-subtitle">First Class Access</p>
+                    </div>
+                </div>
+                
+                <div class="locked-pick" style="margin-bottom: 40px;">
+                    <div class="locked-label">First Class Preview</div>
+                    <h3 class="locked-title">This Week's Black Box Signal</h3>
+                    <p class="locked-text">
+                        <strong>Institutional Flow Alert:</strong> Our AI-driven whale tracking system detected unusual dark pool activity in three sectors this week. One name in particular saw $2.3B in block trades—nearly 15x average volume—suggesting a major player is positioning ahead of earnings.<br><br>
+                        <strong>Sector:</strong> [LOCKED: FIRST CLASS ACCESS ONLY]<br>
+                        <strong>Ticker:</strong> [LOCKED: FIRST CLASS ACCESS ONLY]<br>
+                        <strong>Signal Strength:</strong> [LOCKED: FIRST CLASS ACCESS ONLY]
+                    </p>
+                    <a href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" class="locked-cta">Unlock Now →</a>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, rgba(10, 22, 40, 0.05) 0%, rgba(200, 169, 81, 0.05) 100%); padding: 30px; border-left: 3px solid var(--gold-rich); margin-bottom: 30px;">
+                    <h4 style="font-family: var(--font-display); font-size: 20px; color: var(--navy-rich); margin-bottom: 15px;">🤖 Ask The Captain — Live Demo</h4>
+                    <p style="font-size: 15px; color: var(--slate); line-height: 1.7; margin-bottom: 15px;">
+                        <em>A First Class member asked about PLTR this week. Within 3 minutes, they received a full AI-generated research brief:</em>
+                    </p>
+                    <p style="font-size: 14px; color: var(--stone); line-height: 1.6;">
+                        Technicals: [LOCKED] • Institutional Flow: [LOCKED] • Bull Case: [LOCKED] • Bear Case: [LOCKED] • Conviction Rating: [LOCKED]<br><br>
+                        First Class members get 20 of these per month on any stock, ETF, or crypto.
+                    </p>
+                </div>
+
+                <div style="text-align: center; padding: 40px 30px; background: var(--navy-rich); color: var(--white);">
+                    <p style="font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">First Class Membership</p>
+                    <p style="font-family: var(--font-display); font-size: 24px; color: var(--gold-bright); margin-bottom: 15px;">$29.99/month</p>
+                    <p style="font-size: 15px; color: rgba(255,255,255,0.8); line-height: 1.6; max-width: 500px; margin: 0 auto 25px;">
+                        Unlock the full intelligence suite — AI-powered signals, the complete watchlist, early access, custom research briefs, and monthly portfolio snapshots. Cancel anytime.
+                    </p>
+                    <a href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" style="display: inline-block; padding: 15px 40px; background: var(--gold-rich); color: var(--navy-rich); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; text-decoration: none;">Subscribe Now</a>
+                </div>
+            </section>
+            
+            <section class="premium-section">
+                <div class="premium-header">
+                    <span class="premium-badge">First Class Access</span>
+                    <h2 class="premium-title">Captain's Corner: First Class</h2>
+                    <p class="premium-tagline">"The difference between seeing the map and owning the compass."</p>
+                </div>
+                
+                <div class="premium-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="premium-feature">
+                        <h4>📊 The Black Box</h4>
+                        <p>AI-driven whale tracking, dark pool flow analysis, and institutional positioning signals unavailable to free subscribers.</p>
+                    </div>
+                    <div class="premium-feature">
+                        <h4>📬 Early Briefing</h4>
+                        <p>Captain's Corner delivered to your inbox 24 hours before the public release. See what's moving before everyone else reacts.</p>
+                    </div>
+                    <div class="premium-feature">
+                        <h4>🔓 Full Watchlist</h4>
+                        <p>The complete watchlist with 10+ names, entry/exit targets, conviction ratings, and real-time signal updates. Free sees 3 — you see all.</p>
+                    </div>
+                    <div class="premium-feature">
+                        <h4>🤖 Ask The Captain</h4>
+                        <p>Submit any stock, ETF, or crypto ticker and get a custom AI research brief in minutes — technicals, fundamentals, institutional activity, and a bull/bear case.</p>
+                    </div>
+                </div>
+
+                <div class="premium-cta">
+                    <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
+                        <button id="btn-monthly" onclick="selectPlan('monthly')" style="padding: 10px 25px; background: var(--gold-rich); color: var(--navy-rich); border: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;">
+                            Monthly
+                        </button>
+                        <button id="btn-annual" onclick="selectPlan('annual')" style="padding: 10px 25px; background: transparent; color: var(--gold-bright); border: 1px solid var(--gold-rich); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;">
+                            Annual (Save 30%)
+                        </button>
+                    </div>
+                    <div class="premium-price" id="price-display">$29.99<span style="font-size: 20px;">/month</span></div>
+                    <p id="price-subtext" style="font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 5px;">Cancel anytime. No commitment.</p>
+                    <a id="checkout-link" href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" class="premium-button">Subscribe Now</a>
+                </div>
+            </section>
+
+            <script>
+                function selectPlan(plan) {
+                    const price = document.getElementById('price-display');
+                    const subtext = document.getElementById('price-subtext');
+                    const link = document.getElementById('checkout-link');
+                    const btnM = document.getElementById('btn-monthly');
+                    const btnA = document.getElementById('btn-annual');
+
+                    if (plan === 'annual') {
+                        price.innerHTML = '$249.99<span style="font-size: 20px;">/year</span>';
+                        subtext.textContent = 'Billed annually — save over 30%';
+                        link.href = 'https://buy.stripe.com/eVqdR9aU61JG1TUdjN2B201';
+                        btnA.style.background = 'var(--gold-rich)';
+                        btnA.style.color = 'var(--navy-rich)';
+                        btnA.style.border = 'none';
+                        btnM.style.background = 'transparent';
+                        btnM.style.color = 'var(--gold-bright)';
+                        btnM.style.border = '1px solid var(--gold-rich)';
+                    } else {
+                        price.innerHTML = '$29.99<span style="font-size: 20px;">/month</span>';
+                        subtext.textContent = 'Cancel anytime. No commitment.';
+                        link.href = 'https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200';
+                        btnM.style.background = 'var(--gold-rich)';
+                        btnM.style.color = 'var(--navy-rich)';
+                        btnM.style.border = 'none';
+                        btnA.style.background = 'transparent';
+                        btnA.style.color = 'var(--gold-bright)';
+                        btnA.style.border = '1px solid var(--gold-rich)';
+                    }
+                }
+            </script>
+
+        </main>
+        </div><!-- End Newsletter Section -->
+        
+        <!-- FIRST CLASS PORTAL SECTION -->
+        <div id="firstclass-section" class="content-section">
+            <main class="content" style="padding-top: 40px;">
+                <!-- Password Gate -->
+                <div id="watchlist-gate" class="password-gate show">
+                    <div class="lock-icon">🔒</div>
+                    <h2 class="gate-title">Premium Access Required</h2>
+                    <p class="gate-text">Enter your access code to view the full watchlist and analysis. Code provided in your welcome email.</p>
+                    <p style="color: #d97706; font-size: 13px; margin: 10px 0 20px; font-style: italic;">⚠️ Didn't receive it? Check your spam/promotions folder and add captainscorner.org to your contacts.</p>
+                    <div class="password-form">
+                        <input type="password" class="password-input" id="password-input" placeholder="Enter code">
+                        <button class="password-btn" onclick="checkPassword()">Unlock</button>
+                    </div>
+                    <p class="error-msg" id="error-msg">Invalid access code. Please check your welcome email.</p>
+                    
+                    <div style="margin-top: 40px; padding: 30px; border-top: 1px solid rgba(10, 22, 40, 0.1);">
+                        <p style="color: rgba(10, 22, 40, 0.6); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">Don't have access?</p>
+                        <p style="color: #0A1628; font-size: 18px; font-weight: 600; margin-bottom: 20px;">Join First Class</p>
+                        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                            <a href="https://buy.stripe.com/8x26oH9Q2gEAgOObbF2B200" style="padding: 12px 30px; background: #0A1628; color: white; text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; border-radius: 3px;">$29.99/Month</a>
+                            <a href="https://buy.stripe.com/eVqdR9aU61JG1TUdjN2B201" style="padding: 12px 30px; background: transparent; color: #0A1628; text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; border: 2px solid #0A1628; border-radius: 3px;">$249.99/Year <span style="color: #059669;">(Save 30%)</span></a>
+                        </div>
+                        <p style="color: rgba(10, 22, 40, 0.5); font-size: 12px; margin-top: 15px;">10% donated to No Kid Hungry Foundation</p>
+                    </div>
+                </div>
+                
+                <!-- First Class Content -->
+                <div id="watchlist-content" style="display: none;">
+                    <div class="watchlist-header">
+                        <p class="last-updated">First Class Portal — Last Updated: February 23, 2026</p>
+                        <button class="lock-btn" onclick="lockWatchlist()">🔒 Lock</button>
+                    </div>
+                    
+                    <!-- Stock Pick of the Month -->
+                    <div class="commentary-box" style="background: linear-gradient(135deg, #1a365d 0%, #0A1628 100%); border: 2px solid var(--gold-rich);">
+                        <h3 style="color: var(--gold-bright); font-size: 24px; margin-bottom: 15px;">🏆 Stock Pick of the Month</h3>
+                        <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                            <a href="https://finance.yahoo.com/quote/VST" target="_blank" style="text-decoration: none;">
+                                <div style="font-size: 48px; font-weight: 700; color: var(--gold-bright);">VST</div>
+                            </a>
+                            <div>
+                                <div style="font-size: 20px; color: white; font-weight: 600;">Vistra Corp</div>
+                                <div style="color: var(--gold-soft); font-size: 14px;">Data Center Power Play</div>
+                                <div style="color: white; font-size: 18px; margin-top: 5px;">$171.40 <span style="color: #dc2626;">(-0.64%)</span></div>
+                            </div>
+                        </div>
+                        <p style="font-size: 16px; line-height: 1.8; margin-bottom: 15px;">
+                            <strong>The Thesis:</strong> Vistra is positioned at the intersection of two massive trends: AI infrastructure buildout and the desperate need for reliable power. With 15-year PPAs signed with hyperscalers and a fleet of generation assets in prime locations, Vistra offers exposure to data center growth without the semiconductor valuation risk.
+                        </p>
+                        <p style="font-size: 16px; line-height: 1.8; margin-bottom: 15px;">
+                            <strong>Key Levels:</strong> Entry around $165-170. Target $200. Stop $150.
+                        </p>
+                        <div style="background: rgba(200, 169, 81, 0.1); padding: 15px; border-radius: 4px; margin-top: 20px;">
+                            <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.7);">
+                                <strong>Conviction:</strong> HIGH | <strong>Time Horizon:</strong> 6-12 months | <strong>Risk:</strong> Regulatory changes, power demand slowdown
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- The Black Box -->
+                    <div class="commentary-box" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid #3b82f6; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: #3b82f6; color: white; padding: 4px 12px; border-radius: 3px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">AI Signal</div>
+                        <h3 style="color: #3b82f6; font-size: 22px; margin-bottom: 10px;">🤖 The Black Box</h3>
+                        <p style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">AI-Driven Whale Tracking & Institutional Flow</p>
+                        
+                        <div style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #3b82f6;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <div style="font-size: 32px;">🚨</div>
+                                <div>
+                                    <div style="color: #3b82f6; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Unusual Options Activity</div>
+                                    <div style="color: white; font-size: 18px; font-weight: 600;">VST — Bullish Flow Detected</div>
+                                </div>
+                            </div>
+                            <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.85); margin-bottom: 15px;">
+                                Our AI detected <strong>$47M in call option premiums</strong> purchased in the last 72 hours, representing 340% of average weekly volume. Majority of flow concentrated in March $180 and April $200 strikes. Dark pool block trades show institutional accumulation above $170.
+                            </p>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 12px;">
+                                <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; text-align: center;">
+                                    <div style="color: rgba(255,255,255,0.5); margin-bottom: 5px;">Call/Put Ratio</div>
+                                    <div style="color: #3b82f6; font-weight: 600; font-size: 16px;">4.2x</div>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; text-align: center;">
+                                    <div style="color: rgba(255,255,255,0.5); margin-bottom: 5px;">Unusual Volume</div>
+                                    <div style="color: #3b82f6; font-weight: 600; font-size: 16px;">+340%</div>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px; text-align: center;">
+                                    <div style="color: rgba(255,255,255,0.5); margin-bottom: 5px;">Confidence</div>
+                                    <div style="color: #3b82f6; font-weight: 600; font-size: 16px;">87%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 4px;">
+                            <div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Previous Signals (Last 30 Days)</div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <div style="background: rgba(5, 150, 105, 0.2); color: #059669; padding: 8px 12px; border-radius: 3px; font-size: 12px;">✓ VST (+3.97%)</div>
+                                <div style="background: rgba(5, 150, 105, 0.2); color: #059669; padding: 8px 12px; border-radius: 3px; font-size: 12px;">✓ PLTR (+2.41%)</div>
+                                <div style="background: rgba(220, 38, 38, 0.2); color: #dc2626; padding: 8px 12px; border-radius: 3px; font-size: 12px;">✗ NVDA (-3.91%)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Market Commentary -->
+                    <div class="commentary-box">
+                        <h3>The Week Ahead — April 27 – May 1</h3>
+                        <p><strong>The most catalyst-dense week of Q2.</strong> FOMC convenes Tuesday-Wednesday for Powell's last scheduled press conference as Fed Chair — markets price ~85% odds of a hold at 3.50–3.75%, no SEP refresh, all signal in tone. Wednesday after the close: Microsoft FY26 Q3, Meta Q1, Amazon Q1 — three of the four largest Mag-7 names in one evening, all under the AI-capex microscope. Thursday after the close: Apple FQ2. Macro stack runs Wednesday through Friday: Q1 GDP advance (Wed), March PCE inflation (Thu), and ISM Manufacturing PMI (Fri).</p>
+                        <p><strong>Key data this week:</strong> The data point that matters most is Thursday's March core PCE — the Fed's preferred inflation gauge, the one Powell will reference repeatedly in the press conference. Consensus is for 0.25% MoM. A 0.30%+ print combined with the Michigan inflation expectations data (year-ahead 4.7%) would force a hawkish reset. Q1 GDP advance on Wednesday is expected near 1.5–2.0% — a soft print would amplify the cut-pricing, a strong print would help Powell justify holding longer. Friday's ISM Manufacturing PMI follows March's strong 52.7 reading; consensus is 52.0.</p>
+                        <p><strong>The AI capex test:</strong> Microsoft, Meta, Amazon, Alphabet are tracking near $700B in combined 2026 capex. The market has stopped rewarding AI capex on faith — investors now want to see commensurate revenue growth. Watch Azure AI services revenue, Meta's AI-driven ad uplift commentary, AWS Bedrock/Trainium attach rate, and Apple's Services growth ex-Search-payments. Strong numbers extend the rally; even one disappointment triggers the rotation we have been positioned for.</p>
+                        <p><strong>Watchlist focus:</strong> Microsoft is the week's defining mega-cap print. Intel earned its watchlist slot last week with the highest finish since 2000 — we respect the run but are not chasing. GLD is the cleanest hedge against the inflation-expectation unanchoring the Michigan data flagged.</p>
+                        <p><strong>Levels to watch:</strong> S&P 500 support at 7,100 (last week's intraweek low); break opens 7,000. Resistance at 7,200 — a clean break unlocks 7,300. Nasdaq: 24,500 first support, 25,000 the breakout level. 10-Year Treasury: 4.35% the line in the sand pre-FOMC; above 4.40% is a hawkish signal regardless of what Powell says. Gold: $4,650 the support to watch. VIX: a move above 22 would confirm the rotation scenario; below 17 would invite further compression.</p>
+                    </div>
+                    
+                    <!-- High Conviction -->
+                    <h2 class="section-title" style="font-size: 22px; margin-bottom: 20px;">High Conviction</h2>
+                    <table class="stock-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Price / Change</th>
+                                <th>Thesis</th>
+                                <th>Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="https://finance.yahoo.com/quote/PLTR" target="_blank" style="text-decoration: none; color: inherit;">
+                                        <div class="ticker">PLTR</div>
+                                        <div class="company">Palantir Technologies</div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="price">$138.50</div>
+                                    <div style="color: var(--positive); font-size: 13px;">+2.41%</div>
+                                </td>
+                                <td class="thesis">Wartime AI leader. Pentagon's intelligence backbone for multi-theater operations. Government backlog at record levels. Target: $160.</td>
+                                <td><span class="conviction conviction-high">High</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://finance.yahoo.com/quote/VST" target="_blank" style="text-decoration: none; color: inherit;">
+                                        <div class="ticker">VST</div>
+                                        <div class="company">Vistra Corp</div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="price">$178.20</div>
+                                    <div style="color: var(--positive); font-size: 13px;">+3.97%</div>
+                                </td>
+                                <td class="thesis">Dual catalyst: rising energy prices + data center power demand. 15-year PPAs with hyperscalers lock in cash flow. Energy crisis beneficiary.</td>
+                                <td><span class="conviction conviction-high">High</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Medium Conviction -->
+                    <h2 class="section-title" style="font-size: 22px; margin-bottom: 20px;">Medium Conviction</h2>
+                    <table class="stock-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Price / Change</th>
+                                <th>Thesis</th>
+                                <th>Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="https://finance.yahoo.com/quote/NVDA" target="_blank" style="text-decoration: none; color: inherit;">
+                                        <div class="ticker">NVDA</div>
+                                        <div class="company">NVIDIA Corp</div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="price">$182.40</div>
+                                    <div style="color: var(--negative); font-size: 13px;">-3.91%</div>
+                                </td>
+                                <td class="thesis">AI chip leader caught in broad selloff despite strong Q4 earnings ($1.62 EPS beat). Valuation still elevated—patient on entry.</td>
+                                <td><span class="conviction conviction-medium">Medium</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="https://finance.yahoo.com/quote/CRWD" target="_blank" style="text-decoration: none; color: inherit;">
+                                        <div class="ticker">CRWD</div>
+                                        <div class="company">CrowdStrike</div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="price">$372.15</div>
+                                    <div style="color: var(--negative); font-size: 13px;">-4.24%</div>
+                                </td>
+                                <td class="thesis"><strong>⚠️ WATCH:</strong> Cyber threat concerns rising post-Iran strikes. JPMorgan warned of increased cyber attacks. Potential sentiment reversal.</td>
+                                <td><span class="conviction conviction-medium">Medium</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Speculative -->
+                    <h2 class="section-title" style="font-size: 22px; margin-bottom: 20px;">Speculative</h2>
+                    <table class="stock-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Price / Change</th>
+                                <th>Thesis</th>
+                                <th>Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="https://finance.yahoo.com/quote/RKLB" target="_blank" style="text-decoration: none; color: inherit;">
+                                        <div class="ticker">RKLB</div>
+                                        <div class="company">Rocket Lab</div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="price">$64.30</div>
+                                    <div style="color: var(--negative); font-size: 13px;">-9.26%</div>
+                                </td>
+                                <td class="thesis">Space infrastructure crushed in risk-off. Defense spending tailwind but speculative names punished. Small position only.</td>
+                                <td><span class="conviction conviction-speculative">Speculative</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Sectors -->
+                    <h2 class="section-title" style="font-size: 22px; margin-bottom: 20px;">Sectors on Watch</h2>
+                    <div class="sectors-box">
+                        <p><strong>💻 Mega-Cap Tech:</strong> Microsoft, Meta, Amazon (all Wed AMC) and Apple (Thu AMC) are the deciding vote on whether the AI capex narrative holds. Watch Azure AI services revenue line, Meta AI-driven ad uplift, AWS Bedrock attach rate, Apple Services growth ex-Google. Strong = rally extends; even one miss = first real rotation.</p>
+                        <p><strong>🏦 Financials:</strong> Q1 earnings season has confirmed credit quality is intact. Sector has lagged the tech-led rally on flat yield curve concerns. The May 8 jobs report and Powell's continuity signaling are the next catalysts. Hold quality names; do not overweight here.</p>
+                        <p><strong>🔧 Semiconductors:</strong> The SOX index is in an 18-day winning streak — historically rare and historically followed by 3–5% near-term consolidation. Intel's Q1 print pushed the stock to the highest level since 2000 and confirmed the foundry is monetizing. Respect the run, do not chase.</p>
+                        <p><strong>🥇 Gold / Hedges:</strong> Pulled back roughly 3% from the prior week's high above $4,867 as risk appetite returned, but still firmly in the bull regime. The Michigan inflation expectations spike to 4.7% is the macro reason this stays in the book. Hedges remain on into FOMC week.</p>
+                    </div>
+                    
+                    <!-- Disclaimer -->
+                    <p style="font-size: 12px; color: var(--stone); line-height: 1.6; border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
+                        <strong>Disclaimer:</strong> This watchlist is for informational purposes only and does not constitute investment advice. Past performance does not guarantee future results. All investments carry risk of loss. Mainsail Capital Management is a registered investment advisor. Please consult with a qualified financial advisor before making investment decisions.
+                    </p>
+                </div>
+            </main>
+        </div><!-- End Watchlist Section -->
+        
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-logo">Mainsail Capital Management</div>
+            <p class="footer-tagline">Navigating Your Financial Future</p>
+            
+            <div class="footer-address">
+                <strong>Mainsail Capital Management</strong><br>
+                149 Durham Road, Suite 30<br>
+                Madison, CT 06443<br>
+                Phone: (203) 689-5468<br>
+                <a href="https://www.mainsailcm.com" style="color: var(--gold-rich); text-decoration: none;">www.mainsailcm.com</a>
+            </div>
+            
+            <p class="sign-off">Steady as she goes,<br>The Desk of Mainsail Capital</p>
+            
+            <div class="disclaimer">
+                This newsletter is for informational purposes only and does not constitute investment advice. Past performance does not guarantee future results. All investments carry risk, including possible loss of principal. Mainsail Capital Management is a registered investment advisor.
+            </div>
+        </footer>
+        
+    </div>
+    
+    <!-- TAB & PASSWORD JAVASCRIPT -->
+    <script>
+        // PASSWORD: PREMIUM2026
+        const ACCESS_CODE = 'mainsail26';
+        
+        function showSection(section, btn) {
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            if (btn) btn.classList.add('active');
+            
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(section + '-section').classList.add('active');
+            
+            // If first class portal, check if already unlocked
+            if (section === 'firstclass') {
+                if (sessionStorage.getItem('watchlistUnlocked') === 'true') {
+                    document.getElementById('watchlist-gate').classList.remove('show');
+                    document.getElementById('watchlist-content').style.display = 'block';
+                } else {
+                    document.getElementById('watchlist-gate').classList.add('show');
+                    document.getElementById('watchlist-content').style.display = 'none';
+                }
+            }
+        }
+        
+        function checkPassword() {
+            const input = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('error-msg');
+            const gate = document.getElementById('watchlist-gate');
+            const content = document.getElementById('watchlist-content');
+            
+            if (input === ACCESS_CODE) {
+                gate.classList.remove('show');
+                content.style.display = 'block';
+                errorMsg.style.display = 'none';
+                sessionStorage.setItem('watchlistUnlocked', 'true');
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+        
+        function lockWatchlist() {
+            sessionStorage.removeItem('watchlistUnlocked');
+            document.getElementById('watchlist-gate').classList.add('show');
+            document.getElementById('watchlist-content').style.display = 'none';
+            document.getElementById('password-input').value = '';
+        }
+        
+        // Enter key support
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password-input');
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
+<!-- Force cache bust: Mon Mar  2 00:32:50 EST 2026 -->
